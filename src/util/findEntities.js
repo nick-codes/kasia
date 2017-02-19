@@ -1,4 +1,4 @@
-const isDef = (v) => typeof v !== 'undefined'
+import { isDef } from './helpers'
 
 /** Filter `entities` to contain only those whose `keyToInspect` is in `identifiers`. */
 export default function findEntities (entities, keyToInspect, identifiers) {
@@ -12,7 +12,7 @@ export default function findEntities (entities, keyToInspect, identifiers) {
     for (const key in entitiesOfType) {
       const entity = entitiesOfType[key]
 
-      // Try to find entity by `keyToInspect` but fall back on id and then slug as
+      // Try to find entity by `keyToInspect` but fall back on `id` and then `slug` as
       // for entities that don't have an `id` identifiers will contain their slug
       // and vice-versa for entities that don't have a `slug`
       let entityId = isDef(entity[keyToInspect])

@@ -1,14 +1,7 @@
+import invariant from './util/invariant'
+
 const NODE_WPAPI_GITHUB_URL = 'http://bit.ly/2adfKKg'
 const KASIA_URL = 'http://kasia.io'
-
-function invariant (predicate, message, ...args) {
-  if (!predicate) {
-    const interpolated = args.reduce((str, arg) => str.replace(/%s/, arg), message)
-    const err = new Error('[kasia] ' + interpolated)
-    err.framesToPop = 1
-    throw err
-  }
-}
 
 export default {
   isString: (name, value) => invariant(
@@ -86,14 +79,13 @@ export default {
     `See documentation ${KASIA_URL}.`,
     typeof wordpress
   ),
-  queryHasError: (query, displayName) => {
-    if (query && query.error) {
-      console.log(`[kasia] error in query for ${displayName || 'unknown component'}:\n` + query.error)
-    }
-  },
   isKeyEntitiesByOption: (keyEntitiesBy) => invariant(
     keyEntitiesBy === 'slug' || keyEntitiesBy === 'id',
     'Expecting keyEntitiesBy to be "slug" or "id", got "%s".',
     keyEntitiesBy
+  ),
+  hasWP: (WP) => invariant(
+    WP,
+    'WP is not set.'
   )
 }

@@ -1,7 +1,9 @@
+import invariants from './invariants'
+
 let WP
 
 export default function getWP () {
-  if (!WP) throw new Error('WP not set')
+  invariants.hasWP(WP)
   return WP
 }
 

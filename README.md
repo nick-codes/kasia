@@ -60,6 +60,7 @@ export default class extends React.Component () {
 ## Features
 
 - Declaratively connect React components to data from WordPress.
+- Provides pre-configured components for fetching any content type.
 - Uses [`node-wpapi`](https://github.com/WP-API/node-wpapi) in order to facilitate complex queries.
 - Register and consume Custom Content Types with ease.
 - All WP data is normalised at `store.wordpress`, e.g. `store.wordpress.pages`.
@@ -73,6 +74,9 @@ export default class extends React.Component () {
 - [Import](#import)
 - [__Configure__](#configure)
 - [__Usage__](#usage)
+  * [__Initialise__](#initialise)
+  * [__Components__](#components)
+  * [__Decorators__](#decorators)
 - [Exports](#exports)
 - [Plugins](#plugins)
 - [Universal Applications](#universal-applications)
@@ -130,7 +134,7 @@ import createSagaMiddleware from 'redux-saga'
 import kasia from 'kasia'
 import wpapi from 'wpapi'
 
-const WP = new wpapi({ endpoint: 'http://wordpress/wp-json' })
+const WP = wpapi.site('http://wordpress/wp-json')
 
 const { kasiaReducer, kasiaSagas } = kasia({ WP })
 
@@ -159,7 +163,9 @@ export default function configureStore (initialState) {
 
 ## Usage
 
-### `kasia(options) : Object`
+### Initialise
+
+#### `kasia(options) : Object`
 
 Configure Kasia.
 
@@ -169,7 +175,7 @@ Returns an object containing the Kasia reducer and sagas.
 
 ```js
 const { kasiaReducer, kasiaSagas } = kasia({
-  WP: new wpapi({ endpoint: 'http://wordpress/wp-json' })
+  WP: wpapi.site('http://wordpress/wp-json')
 })
 ```
 
@@ -219,6 +225,62 @@ The `options` object accepts:
     ]
     ```
     
+### Components
+
+Kasia provides `Wp*` components that allow you to fetch a single entity from or perform an
+arbitrary query to the WP-API and get the result passed to the children.
+
+#### Built-in types
+
+`WpCategory`, `WpComment`, `WpMedia`, `WpPage`, `WpPost`, `WpPostStatus`, 
+
+`WpPostType`, `WpPostRevision`, `WpTag`, `WpTaxonomy`, `WpUser`
+
+Props:
+
+- __slug__ {String} _(optional)_ Post slug
+- __id__ {Number} _(optional)_ Post id
+- __fromProps__ {Function} _(optional)_ Function to derive slug or id
+
+Exactly one of `slug`, `id`, `fromProps` must be given.
+
+Accepts any number of components or a single function as children.
+
+Examples:
+
+```js
+// Page by slug
+<WpPage slug='homepage'>
+  {({ page, query }) => query.complete ? <Page data={page} /> : <Loading />}
+</WpPage>
+
+// Page by slug derived from props
+// Each child will receive `kasia` on props 
+<WpPost fromProps={(props) => props.params.slug}>
+  <Post.Title />
+  <Post.Content />
+</WpPost>
+```
+
+#### Query
+
+`<WpQuery query={queryFn}>`
+
+Props:
+
+- __query__ {Function} Function that takes `wpapi`, `props`, `state` args, returns a `node-wpapi` query
+
+Accepts any number of components or a single function as children.
+ 
+Examples:
+
+```js
+// Get latest posts
+<WpQuery query={(wpapi) => wpapi.posts()}>
+  (({ data: { posts } }) => <PostsList posts={posts} />)
+</WpQuery>
+```
+
 ### Decorators
 
 Things to keep in mind:
@@ -279,9 +341,6 @@ Returns a connected component.
 
 The component will request new data via `queryFn` if `shouldUpdate` returns true.
 
-Entities returned from the query will be placed on `this.props.kasia.entities` under the same
-normalised structure as described in [The Shape of Things](#the-shape-of-things).
-
 Example, fetching the most recent "News" entities:
 
 ```js
@@ -290,9 +349,10 @@ import { Route } from 'react-router'
 import { connectWpPost } from 'kasia/connect'
 
 // Note the invocation of `embed` in the query chain
-@connectWpQuery((wpapi, props) => {
-  return wpapi.news().month(props.month).embed().get()
-})
+@connectWpQuery(
+  (wpapi, props) => wpapi.news().month(props.month).embed().get(), 
+  () => false
+)
 export default class RecentNews extends Component {
   render () {
     const {
@@ -315,9 +375,10 @@ export default class RecentNews extends Component {
 }
 
 // Without decorator support
-export default connectWpQuery((wpapi) => {
-  return wpapi.news().embed().get()
-})(Post)
+export default connectWpQuery(
+  (wpapi) => wpapi.news().embed().get(), 
+  () => false
+)(Post)
 ```
 
 ## Exports

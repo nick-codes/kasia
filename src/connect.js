@@ -67,15 +67,14 @@ const base = (target) => {
     _reconcileWpData (props) {
       const query = this._query()
       const data = this._makePropsData(props)
-      const fallbackQuery = { complete: false, OK: null }
 
-      if (query) {
-        invariants.queryHasError(query, displayName)
+      if (query && query.error) {
+        console.log(`[kasia] error in query for ${displayName}:\n` + query.error)
       }
 
       const result = {
         kasia: {
-          query: query || fallbackQuery,
+          query: query,
           [this.dataKey]: data
         }
       }
@@ -93,7 +92,8 @@ const base = (target) => {
     }
 
     _query () {
-      return this.props.wordpress.queries[this.queryId]
+      const query = this.props.wordpress.queries[this.queryId]
+      return query || { complete: false, OK: null }
     }
 
     componentWillMount () {
@@ -197,15 +197,15 @@ export function connectWpPost (contentType, id) {
       _makePropsData (props) {
         const query = this._query()
 
-        if (!query || !query.complete || query.error) return null
+        if (query && query.complete && !query.error) {
+          const entities = this.props.wordpress.entities[typeConfig.plural]
+          const keys = Object.keys(entities)
+          const realId = identifier(displayName, id, props)
 
-        const entities = this.props.wordpress.entities[typeConfig.plural]
-        const keys = Object.keys(entities)
-        const realId = identifier(displayName, id, props)
-
-        for (let i = 0, len = keys.length; i < len; i++) {
-          const entity = entities[keys[i]]
-          if (entity.id === realId || entity.slug === realId) return entity
+          for (let i = 0, len = keys.length; i < len; i++) {
+            const entity = entities[keys[i]]
+            if (entity.id === realId || entity.slug === realId) return entity
+          }
         }
 
         return null
@@ -234,20 +234,17 @@ export function connectWpPost (contentType, id) {
  *
  * @example Get all posts by an author:
  * ```js
- * connectWpQuery((wpapi) => wpapi.posts().embed().author('David Bowie'), () => true)
+ * connectWpQuery((wpapi) => wpapi.posts().embed().author('David Bowie'))
  * ```
  *
  * @example Get all pages:
  * ```js
- * connectWpQuery((wpapi) => wpapi.pages().embed(), () => true)
+ * connectWpQuery((wpapi) => wpapi.pages().embed())
  * ```
  *
  * @example Get custom content type by slug (content type registered at init):
  * ```js
- * connectWpQuery(
- *   (wpapi) => wpapi.news().slug('gullible-removed-from-the-dictionary').embed(),
- *   () => true
- * )
+ * connectWpQuery((wpapi) => wpapi.news().slug('gullible-removed-from-the-dictionary').embed())
  * ```
  *
  * @example Update only when `props.id` changes:
