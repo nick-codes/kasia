@@ -14,7 +14,7 @@ import { buildQueryFunction } from '../util/queryBuilder'
 export function * fetch (action) {
   try {
     yield put(acknowledgeRequest(action))
-    const wpapi = getWP()
+    const wpapi = yield getWP()
     const fn = action.queryFn || buildQueryFunction(action)
     const data = yield call(fn, wpapi)
     yield put(completeRequest(action.id, data))

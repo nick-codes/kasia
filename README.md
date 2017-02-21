@@ -61,8 +61,8 @@ export default class extends React.Component () {
 
 - Declaratively connect React components to data from WordPress.
 - Uses [`node-wpapi`](https://github.com/WP-API/node-wpapi) in order to facilitate complex queries.
-- Register and consume Custom Content Types with ease.
-- All WP data is normalised at `store.wordpress`, e.g. `store.wordpress.pages`.
+- Autodiscover, register, and consume Custom Content Types.
+- All data normalised at `store.wordpress`, e.g. `store.wordpress.pages`.
 - Support for universal applications.
 - Support for plugins, e.g. [`wp-api-menus`](https://github.com/outlandishideas/kasia-plugin-wp-api-menus).
 
@@ -127,32 +127,19 @@ A slimline example...
 ```js
 import { combineReducers, createStore, applyMiddleware } from 'redux'
 import createSagaMiddleware from 'redux-saga'
+import WPAPI from 'wpapi'
 import kasia from 'kasia'
-import wpapi from 'wpapi'
 
-const WP = new wpapi({ endpoint: 'http://wordpress/wp-json' })
-
-const { kasiaReducer, kasiaSagas } = kasia({ WP })
-
-const rootSaga = function * () {
-  yield [...kasiaSagas]
-}
-
-const rootReducer = combineReducers({
-  ...kasiaReducer
-})
-
+const wpapi = WPAPI.autodiscover('https://wordpress')
+const { kasiaReducer, kasiaSagas } = kasia({ wpapi })
+const rootSaga = function * () { yield [...kasiaSagas] }
+const rootReducer = combineReducers({ ...kasiaReducer })
 const sagaMiddleware = createSagaMiddleware()
 
 export default function configureStore (initialState) {
-  const store = createStore(
-    rootReducer,
-    initialState,
-    applyMiddleware(sagaMiddleware)
-  )
-  
+  const middleware = applyMiddleware(sagaMiddleware)
+  const store = createStore(rootReducer, initialState, middleware ) 
   sagaMiddleware.run(rootSaga)
-
   return store
 }
 ```

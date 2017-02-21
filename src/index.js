@@ -72,9 +72,9 @@ function kasia (opts = {}) {
   const { sagas, reducers } = userPlugins.reduce((components, p, i) => {
     const isArr = p instanceof Array
     invariants.isPlugin('plugin at index ' + i, isArr ? p[0] : p)
-    const { sagas, reducers } = isArr ? p[0](wpapi, p[1] || {}, opts) : p(wpapi, {}, opts)
-    components.sagas.push(...sagas)
-    Object.assign(components.reducers, reducers)
+    const { sagas = [], reducers = {} } = isArr ? p[0](wpapi, p[1] || {}, opts) : p(wpapi, {}, opts)
+    components.sagas = [].concat(components.sagas, sagas)
+    components.reducers = Object.assign({}, components.reducers, reducers)
     return components
   }, COMPONENTS_BASE)
 

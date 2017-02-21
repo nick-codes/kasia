@@ -6,6 +6,6 @@ export default function getWP () {
 }
 
 export function setWP (_WP) {
-  WP = _WP
+  WP = Promise.resolve(_WP)
   return WP
 }
