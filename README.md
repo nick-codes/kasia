@@ -130,7 +130,7 @@ import createSagaMiddleware from 'redux-saga'
 import WPAPI from 'wpapi'
 import kasia from 'kasia'
 
-const wpapi = WPAPI.autodiscover('https://wordpress')
+const wpapi = WPAPI.discover('https://wordpress')
 const { kasiaReducer, kasiaSagas } = kasia({ wpapi })
 const rootSaga = function * () { yield [...kasiaSagas] }
 const rootReducer = combineReducers({ ...kasiaReducer })
