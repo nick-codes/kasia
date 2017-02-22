@@ -17,7 +17,7 @@ function idOrSlug (componentName) {
 // Single entity Post as WpPost, Page as WpPage, etc. components
 Object.keys(ContentTypes).forEach((contentType) => {
   module.exports['Wp' + contentType] = function () {
-    const child = sharer(this.props.children)
+    const child = sharer(this.props)
     return connectWpPost(ContentTypes[contentType], idOrSlug(contentType))(child)
   }
 })
