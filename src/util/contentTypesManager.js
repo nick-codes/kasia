@@ -6,6 +6,19 @@ import getWP from '../wpapi'
 import invariants from '../invariants'
 import { WpApiNamespace, ContentTypes, ContentTypesPlural } from '../constants'
 
+export default { register, registerFromInstance, get, getAll, derive }
+
+const optionsCache = new Map()
+const mixins = { ...wpFilterMixins, ...wpParamMixins }
+
+// Pre-populate cache with built-in content type options.
+Object.keys(ContentTypes).forEach((key) => {
+  const name = ContentTypes[key]
+  const plural = ContentTypesPlural[name]
+  const slug = ContentTypesPlural[name]
+  register({ name, plural, slug }, false)
+})
+
 /** Assert that an object has all `keys`. */
 function hasKeys (obj, ...keys) {
   return keys.reduce((bool, key) => {
@@ -14,44 +27,37 @@ function hasKeys (obj, ...keys) {
   }, true)
 }
 
-const optionsCache = new Map()
-
-const contentTypes = { register, get, getAll, derive }
-
-export default contentTypes
-
-// Pre-populate cache with built-in content type options.
-Object.keys(ContentTypes).forEach((key) => {
-  const name = ContentTypes[key]
-  const plural = ContentTypesPlural[name]
-  const slug = ContentTypesPlural[name]
-  contentTypes.register({ name, plural, slug }, true)
-})
-
 /** Create and set options object for a type in the cache and register on wpapi instance. */
-function register (contentType, builtIn) {
+function register (contentType, registerOnInstance = true) {
   invariants.isValidContentTypeObject(contentType)
-  invariants.isNewContentType(contentTypes.getAll(), contentType)
+  invariants.isNewContentType(getAll(), contentType)
 
   const {
     namespace = WpApiNamespace,
-    name, plural, slug,
-    route: _route,
-    methodName: _methodName
+    name, plural, slug, route, methodName
   } = contentType
 
-  const route = _route || `/${slug}/(?P<id>)`
-  const methodName = humps.camelize(_methodName || plural)
-  const mixins = Object.assign({}, wpFilterMixins, wpParamMixins)
-  const options = Object.assign({}, contentType, { route, methodName })
+  const options = {
+    ...contentType,
+    route: route || `/${slug}/(?P<id>)`,
+    methodName: humps.camelize(methodName || plural)
+  }
 
   // Only register custom types with node-wpapi instance as built-ins are already available
-  if (!builtIn) {
-    const WP = getWP()
-    WP[methodName] = WP.registerRoute(namespace, route, { mixins })
+  if (registerOnInstance) {
+    getWP().then((wpapi) => {
+      wpapi[methodName] = wpapi.registerRoute(namespace, route, { mixins })
+    })
   }
 
   optionsCache.set(name, options)
+}
+
+/** Register custom content types found on a `node-wpapi` instance produced by autodiscovery. */
+function registerFromInstance (site) {
+  if (!site) return
+
+
 }
 
 /** Get the options for a content type. */

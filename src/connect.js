@@ -133,8 +133,10 @@ const base = (target) => {
     }
 
     render () {
-      const props = Object.assign({}, this.props, this._reconcileWpData(this.props))
-      return React.createElement(target, props)
+      return React.createElement(target, {
+        ...this.props,
+        ...this._reconcileWpData(this.props)
+      })
     }
   }
 }

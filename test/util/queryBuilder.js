@@ -29,8 +29,9 @@ describe('util/queryBuilder', () => {
     })
 
     it('that calls chain with correct method name and identifier', () => {
-      queryFn(getWP())
-      expect(output).toEqual(input)
+      return getWP()
+        .then(queryFn)
+        .then((output) => expect(output).toEqual(input))
     })
   })
 })

@@ -28,10 +28,10 @@ function mergeNativeAndThirdPartyReducers (reducers, normaliser) {
   // Group reducers by their action type
   const reducersByActionType = Object.keys(reducers)
     .reduce(function groupByActionType (reducer, actionType) {
-      reducer[actionType] = [].concat(
-        reducer[actionType] || [],
-        reducers[actionType] || []
-      )
+      reducer[actionType] = [
+        ...reducer[actionType] || [],
+        ...reducers[actionType] || []
+      ]
       return reducer
     }, baseReducer)
 
@@ -122,7 +122,7 @@ export function failReducer (state, action) {
 export default function createReducer ({ keyEntitiesBy, reducers }) {
   const normaliser = (data) => normalise(data, keyEntitiesBy)
   const reducer = mergeNativeAndThirdPartyReducers(reducers, normaliser)
-  const initialState = Object.assign({}, INITIAL_STATE, { keyEntitiesBy })
+  const initialState = { ...INITIAL_STATE, keyEntitiesBy }
 
   return {
     wordpress: function kasiaReducer (state = initialState, action) {

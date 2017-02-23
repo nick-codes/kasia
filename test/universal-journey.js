@@ -9,7 +9,7 @@ jest.mock('is-node-fn')
 import React from 'react'
 import createSagaMiddleware from 'redux-saga'
 import isNode from 'is-node-fn'
-import Wpapi from 'wpapi'
+import WPAPI from 'wpapi'
 import { put } from 'redux-saga/effects'
 import { createStore as _createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import { mount } from 'enzyme'
@@ -41,7 +41,7 @@ jest.mock('../src/util/queryBuilder', () => ({
 
 function setup (keyEntitiesBy) {
   const { kasiaReducer, kasiaSagas } = kasia({
-    wpapi: new Wpapi({ endpoint: '123' }),
+    wpapi: new WPAPI({ endpoint: '123' }),
     keyEntitiesBy
   })
 

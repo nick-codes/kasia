@@ -5,7 +5,7 @@ jest.disableAutomock()
 jest.mock('redux-saga')
 
 import { combineReducers, createStore } from 'redux'
-import Wpapi from 'wpapi'
+import WPAPI from 'wpapi'
 
 import postJson from '../__fixtures__/wp-api-responses/post'
 import initialState from '../__mocks__/states/initial'
@@ -20,7 +20,7 @@ import { createPostRequest, completeRequest, failRequest } from '../../src/redux
 
 function setup (keyEntitiesBy) {
   const { kasiaReducer } = kasia({
-    wpapi: new Wpapi({ endpoint: '123' }),
+    wpapi: new WPAPI({ endpoint: '123' }),
     keyEntitiesBy
   })
   const rootReducer = combineReducers(kasiaReducer)

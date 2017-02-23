@@ -2,7 +2,7 @@
 
 jest.disableAutomock()
 
-import Wpapi from 'wpapi'
+import WPAPI from 'wpapi'
 import { combineReducers, createStore } from 'redux'
 import { spawn } from 'redux-saga/effects'
 
@@ -34,7 +34,7 @@ function setup () {
   })
 
   const { kasiaReducer, kasiaSagas } = kasia({
-    wpapi: new Wpapi({ endpoint: '' }),
+    wpapi: new WPAPI({ endpoint: '' }),
     plugins: [plugin]
   })
 

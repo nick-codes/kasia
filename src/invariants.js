@@ -39,7 +39,7 @@ export default {
     name, typeof value
   ),
   isWpApiInstance: (value = {}) => invariant(
-    typeof value.registerRoute === 'function',
+    typeof (value.then || value.registerRoute) === 'function',
     'Expecting WP to be instance of `node-wpapi`. ' +
     `See documentation: ${NODE_WPAPI_GITHUB_URL}.`
   ),
@@ -95,5 +95,10 @@ export default {
     keyEntitiesBy === 'slug' || keyEntitiesBy === 'id',
     'Expecting keyEntitiesBy to be "slug" or "id", got "%s".',
     keyEntitiesBy
+  ),
+  notDiscoveryAndContentTypes: (wpapi, contentTypes) => invariant(
+    typeof wpapi.then === 'function' && !contentTypes.length ||
+    typeof wpapi.then !== 'function' && contentTypes.length,
+    'You must use only one of manual custom content type registration or autodiscovery.'
   )
 }

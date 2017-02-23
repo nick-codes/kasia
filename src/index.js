@@ -35,7 +35,7 @@ export function runSagas (store, sagas) {
 
 /**
  * Configure Kasia.
- * @param {WP} opts.wpapi Instance of node-wpapi
+ * @param {Object|Promise} opts.wpapi Instance of node-wpapi
  * @param {String} [opts.keyEntitiesBy] Property used to key entities in the store
  * @param {Boolean} [opts.debug] Log debug statements
  * @param {Array} [opts.plugins] Kasia plugins
@@ -53,7 +53,6 @@ function kasia (opts = {}) {
   } = opts
 
   toggleDebug(_debug)
-
   debug('initialised with: ', opts)
 
   if (WP) {
@@ -61,20 +60,26 @@ function kasia (opts = {}) {
     wpapi = WP
   }
 
-  invariants.isWpApiInstance(setWP(wpapi))
+  const usingAutodiscovery = typeof wpapi.then === 'function'
+
+  invariants.isWpApiInstance(wpapi)
+  invariants.notDiscoveryAndContentTypes(wpapi, contentTypes)
   invariants.isKeyEntitiesByOption(keyEntitiesBy)
   invariants.isArray('plugins', userPlugins)
   invariants.isArray('contentTypes', contentTypes)
 
-  contentTypes.forEach((type) => contentTypesManager.register(type))
+  setWP(wpapi)
+
+  if (usingAutodiscovery) wpapi.then(contentTypesManager.registerFromInstance)
+  else contentTypes.forEach(contentTypesManager.register)
 
   // Merge plugins into internal sagas array and reducers object
   const { sagas, reducers } = userPlugins.reduce((components, p, i) => {
     const isArr = p instanceof Array
     invariants.isPlugin('plugin at index ' + i, isArr ? p[0] : p)
     const { sagas = [], reducers = {} } = isArr ? p[0](wpapi, p[1] || {}, opts) : p(wpapi, {}, opts)
-    components.sagas = [].concat(components.sagas, sagas)
-    components.reducers = Object.assign({}, components.reducers, reducers)
+    components.sagas = [ ...components.sagas, ...sagas ]
+    components.reducers = { ...components.reducers, ...reducers }
     return components
   }, COMPONENTS_BASE)
 
