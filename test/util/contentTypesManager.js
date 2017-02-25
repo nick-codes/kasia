@@ -39,7 +39,7 @@ describe('util/contentTypesManager', () => {
     it('adds custom content type to cache', () => {
       const opts = { name: 'article', plural: 'articles', slug: 'articles' }
       contentTypesManager.register(opts)
-      const actual = contentTypesManager.getAll().get('article')
+      const actual = contentTypesManager.get('article')
       const expected = {
         ...opts,
         call: 'articles',

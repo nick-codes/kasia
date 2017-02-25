@@ -62,7 +62,7 @@ function kasia (opts = {}) {
   debug('initialised with: ', opts)
 
   invariants.isNodeWpapiInstance(wpapi)
-  invariants.isOneOfAutoOrManualCustomContentTypeRegistration(wpapi, contentTypes)
+  invariants.isOneOfAutoOrManualTypeRegistration(wpapi, contentTypes)
   invariants.isKeyEntitiesByOption(keyEntitiesBy)
   invariants.isArray('plugins', plugins)
   invariants.isArray('contentTypes', contentTypes)

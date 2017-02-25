@@ -89,12 +89,12 @@ export default {
     'Expecting keyEntitiesBy to be "slug" or "id", got "%s".',
     keyEntitiesBy
   ),
-  isOneOfAutoOrManualCustomContentTypeRegistration: (wpapi, contentTypes) => invariant(
+  isOneOfAutoOrManualTypeRegistration: (wpapi, contentTypes) => invariant(
     typeof wpapi.then === 'function' && !contentTypes.length ||
     typeof wpapi.then !== 'function' && contentTypes.length,
     'You must use only one of custom content type registration or autodiscovery.'
   ),
-  isAvailableCustomContentTypeMethod: (wpapi, typeMethod, typeName) => invariant(
+  isCustomContentTypeMethod: (wpapi, typeMethod, typeName) => invariant(
     typeof wpapi[typeMethod] === 'function',
     'Method `%s` does not exist on node-wpapi instance for "%s" content type.',
     typeMethod, typeName

@@ -27,7 +27,7 @@ function hasKeys (obj, ...keys) {
   }, true)
 }
 
-/** Create and set options object for a type in the cache and register on wpapi instance. */
+/** Create and set options object for a type in the cache and register on wpapi instance. **/
 function register (contentType, registerOnInstance = true) {
   invariants.isValidContentTypeObject(contentType)
   invariants.isNewContentType(getAll(), contentType)
@@ -43,7 +43,7 @@ function register (contentType, registerOnInstance = true) {
     ...contentType,
     route: route || `/${slug}/(?P<id>)`,
     call: (wpapi, id) => {
-      invariants.isAvailableCustomContentTypeMethod(wpapi, typeMethod, name)
+      invariants.isCustomContentTypeMethod(wpapi, typeMethod, name)
       return wpapi[typeMethod](id).embed().get()
     }
   }
@@ -62,7 +62,21 @@ function register (contentType, registerOnInstance = true) {
 function registerFromInstance (site) {
   if (!site) return
 
-  console.log(Object.keys(site))
+  Object.keys(site).forEach((key) => {
+    if (
+      key[0] === '_' || // ignore private properties
+      typeof value !== 'function' || // ignore non-methods
+      ContentTypesPlural[key] // ignore pre-registered built-ins
+    ) return
+
+    const value = site[key]
+
+    register({
+      name: value,
+      plural: value,
+      slug: value
+    }, false)
+  })
 }
 
 /** Get the options for a content type. */
