@@ -100,5 +100,10 @@ export default {
     typeof wpapi.then === 'function' && !contentTypes.length ||
     typeof wpapi.then !== 'function' && contentTypes.length,
     'You must use only one of manual custom content type registration or autodiscovery.'
+  ),
+  instanceHasCustomContentTypeMethod: (wpapi, typeMethod, typeName) => invariant(
+    typeof wpapi[typeMethod] === 'function',
+    'Method for %s does not exist on node-wpapi instance for "%s" content type.',
+    typeMethod, typeName
   )
 }

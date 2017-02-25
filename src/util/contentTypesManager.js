@@ -42,7 +42,10 @@ function register (contentType, registerOnInstance = true) {
   const options = {
     ...contentType,
     route: route || `/${slug}/(?P<id>)`,
-    call: (wpapi, id) => wpapi[typeMethod](id).embed().get()
+    call: (wpapi, id) => {
+      invariants.instanceHasCustomContentTypeMethod(wpapi, typeMethod, name)
+      return wpapi[typeMethod](id).embed().get()
+    }
   }
 
   // Only register custom types with node-wpapi instance as built-ins are already available
