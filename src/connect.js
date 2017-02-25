@@ -69,8 +69,8 @@ const base = (target) => {
       const data = this._makePropsData(props)
       const fallbackQuery = { complete: false, OK: null }
 
-      if (query) {
-        invariants.queryHasError(query, displayName)
+      if (query && query.error) {
+        console.log(`[kasia] error in query for ${displayName || 'unknown component'}:\n` + query.error)
       }
 
       const result = {
