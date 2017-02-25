@@ -23,13 +23,14 @@ describe('autodiscovery', () => {
   it('registers custom content types from instance', () => {
     kasia({ wpapi: Promise.resolve({ blogPosts: () => {} }) })
     const types = contentTypesManager.getAll()
+    //TODO complete expect
     expect(types.blogPosts).toEqual({
       namespace: WpApiNamespace,
       name: 'blogPosts',
       plural: 'blogPosts',
       slug: 'blogPost',
       route: '',
-      methodName: ''
+      call: () => {}
   })
   })
 

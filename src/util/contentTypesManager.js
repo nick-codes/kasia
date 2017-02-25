@@ -37,10 +37,12 @@ function register (contentType, registerOnInstance = true) {
     name, plural, slug, route, methodName
   } = contentType
 
+  const typeMethod = methodName || humps.camelize(plural)
+
   const options = {
     ...contentType,
     route: route || `/${slug}/(?P<id>)`,
-    methodName: humps.camelize(methodName || plural)
+    call: (wpapi, id) => wpapi[typeMethod](id).embed().get()
   }
 
   // Only register custom types with node-wpapi instance as built-ins are already available

@@ -22,6 +22,11 @@ describe('redux/sagas', () => {
       expect(actual).toEqual(expected)
     })
 
+    it('yields call to getWP', () => {
+      const actual = generator.next().value
+      return expect(actual).toEqual(getWP())
+    })
+
     it('yields a call to result of buildQueryFunction', () => {
       const actual = generator.next().value
       const expected = call(buildQueryFunction(action), getWP())

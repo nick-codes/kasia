@@ -40,10 +40,11 @@ describe('util/contentTypesManager', () => {
       const opts = { name: 'article', plural: 'articles', slug: 'articles' }
       contentTypesManager.register(opts)
       const actual = contentTypesManager.getAll().get('article')
-      const expected = Object.assign({}, opts, {
-        methodName: 'articles',
+      const expected = {
+        ...opts,
+        call: 'articles',
         route: '/articles/(?P<id>)'
-      })
+      }
       expect(actual).toEqual(expected)
     })
   })
