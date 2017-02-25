@@ -79,8 +79,8 @@ export default {
     wordpress,
     'No `wordpress` object on the store. ' +
     'Is your store configured correctly? ' +
-    `See documentation ${KASIA_URL}.`,
-    typeof wordpress
+    'See documentation %s.',
+    typeof wordpress, KASIA_URL
   ),
   isKeyEntitiesByOption: (keyEntitiesBy) => invariant(
     keyEntitiesBy === 'slug' || keyEntitiesBy === 'id',
