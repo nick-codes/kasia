@@ -5,18 +5,18 @@ import debug from './util/debug'
 import contentTypesManager from './util/contentTypesManager'
 import invariants from './invariants'
 import queryCounter from './util/queryCounter'
-import findEntities from './util/findEntities'
+import entities from './util/entities'
 import { createPostRequest, createQueryRequest } from './redux/actions'
 import { fetch } from './redux/sagas'
 
-const WARN_NO_ENTITIES_PROP = 0
-const WARN_NO_REWIND = 1
+const WARN_NO_ENTITIES_PROP = 'WARN_NO_ENTITIES_PROP'
+const WARN_NO_REWIND = 'WARN_NO_REWIND'
 
 // Is a component the first Kasia component to mount?
 let firstMount = true
 
 // What have we warned the consumer of?
-let haveWarned = []
+let haveWarned = {}
 
 /** Reset first mount flag, should be called before SSR of each request. */
 export function rewind () {
@@ -298,7 +298,7 @@ export function connectWpQuery (queryFn, shouldUpdate) {
         const query = this._query()
         const state = this.props.wordpress
         if (!query || !query.complete || query.error) return {}
-        else return findEntities(state.entities, state.keyEntitiesBy, query.entities)
+        else return entities.find(state.entities, state.keyEntitiesBy, query.entities)
       }
     }
 

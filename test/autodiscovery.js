@@ -16,8 +16,9 @@ describe('autodiscovery', () => {
   })
 
   it('sets promise as internal wpapi record', () => {
-    kasia({ wpapi: Promise.resolve(true) })
-    return getWP().then((v) => expect(v).toEqual(true))
+    const wpapi = Promise.resolve()
+    kasia({ wpapi })
+    expect(getWP()).toEqual(wpapi)
   })
 
   it('registers custom content types from instance', () => {

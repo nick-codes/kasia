@@ -77,9 +77,7 @@ function getAll () {
 
 /** Derive the content type of an entity from the WP-API. */
 function derive (entity) {
-  if (!entity) {
-    throw new Error(`Expecting entity to be an object, got "${typeof entity}".`)
-  }
+  invariants.isObject('entity', entity)
 
   if (typeof entity.type !== 'undefined') {
     switch (entity.type) {

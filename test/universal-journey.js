@@ -32,13 +32,6 @@ const post3 = Object.assign({}, post, { id: 18, slug: 'post-3', title: { rendere
 // post to return from queryFn
 let returnPost
 
-// we need to mock responses from WP-API
-jest.mock('../src/util/queryBuilder', () => ({
-  buildQueryFunction: () => () => new Promise((resolve) => {
-    setTimeout(() => resolve(returnPost))
-  })
-}))
-
 function setup (keyEntitiesBy) {
   const { kasiaReducer, kasiaSagas } = kasia({
     wpapi: new WPAPI({ endpoint: '123' }),

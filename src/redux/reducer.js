@@ -1,8 +1,7 @@
 import merge from 'lodash.merge'
 import isNode from 'is-node-fn'
 
-import pickEntityIds from '../util/pickEntityIds'
-import normalise from '../util/normalise'
+import entities from '../util/entities'
 import { ActionTypes } from '../constants'
 
 export const INITIAL_STATE = {
@@ -85,7 +84,7 @@ export function completeReducer (normalise) {
     if (typeof action.id === 'number') {
       state.queries[action.id] = {
         id: action.id,
-        entities: pickEntityIds(action.data),
+        entities: entities.pickIds(action.data),
         paging: action.data._paging || {},
         prepared: isNode(),
         complete: true,
@@ -120,7 +119,7 @@ export function failReducer (state, action) {
  * @returns {Object} Kasia reducer
  */
 export default function createReducer ({ keyEntitiesBy, reducers }) {
-  const normaliser = (data) => normalise(data, keyEntitiesBy)
+  const normaliser = (data) => entities.normalise(data, keyEntitiesBy)
   const reducer = mergeNativeAndThirdPartyReducers(reducers, normaliser)
   const initialState = { ...INITIAL_STATE, keyEntitiesBy }
 

@@ -3,7 +3,7 @@
 jest.disableAutomock()
 
 import '../__mocks__/WP'
-import normalise from '../../src/util/normalise'
+import entities from '../../src/util/entities'
 import contentTypesManager from '../../src/util/contentTypesManager'
 import schemasManager from '../../src/util/schemasManager'
 import { ContentTypes } from '../../src/constants'
@@ -104,13 +104,13 @@ describe('util/normalise', () => {
 
       if (testKeyById) {
         it(`should normalise single "${contentType}" by id`, () => {
-          const result = normalise(first, 'id')
+          const result = entities.normalise(first, 'id')
           const actual = Object.keys(result)
           expect(actual).toEqual(collections)
         })
 
         it(`should normalise multiple "${contentType}" by id`, () => {
-          const result = normalise(multiple, 'id')
+          const result = entities.normalise(multiple, 'id')
           const actual = Object.keys(result[plural])
           const expected = [first.id, second.id].map(String)
           expect(actual).toEqual(expected)
@@ -119,13 +119,13 @@ describe('util/normalise', () => {
 
       if (testKeyBySlug) {
         it(`should normalise single "${contentType}" by slug`, () => {
-          const result = normalise(first, 'slug')
+          const result = entities.normalise(first, 'slug')
           const actual = Object.keys(result)
           expect(actual).toEqual(collections)
         })
 
         it(`should normalise multiple "${contentType}" by slug`, () => {
-          const result = normalise(multiple, 'slug')
+          const result = entities.normalise(multiple, 'slug')
           const actual = Object.keys(result[plural])
           const expected = [first.slug, second.slug]
           expect(actual).toEqual(expected)

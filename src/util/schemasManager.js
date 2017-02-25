@@ -1,10 +1,11 @@
 import { Schema, arrayOf } from 'normalizr'
 
+import invariants from '../invariants'
 import { ContentTypes, ContentTypesPlural } from '../constants'
 
-const schemasManager = { __flush__, getAll, createSchema, init }
+const api = { __flush__, getAll, createSchema, init }
 
-export default schemasManager
+export default api
 
 /** Schema object cache, populated in `makeSchemas`. */
 let schemas
@@ -25,20 +26,15 @@ function getAll () {
 
 /** Create a custom schema definition (for custom content types). */
 function createSchema (name, idAttribute) {
-  if (!schemas) {
-    throw new Error('createSchema called before schema cache populated, call makeSchemas first.')
-  } else if (typeof name !== 'string') {
-    throw new Error(`Expecting name to be a string, got "${typeof name}".`)
-  } else if (typeof idAttribute !== 'string') {
-    throw new Error(`Expecting idAttribute to be a string, got "${typeof idAttribute}".`)
-  }
+  invariants.isOk(schemas, 'createSchema called before cache populated.')
+  invariants.isString('name', name)
+  invariants.isString('idAttribute', idAttribute)
 
   const contentTypeSchema = new Schema(name, { idAttribute })
 
   contentTypeSchema.define({
     author: userSchema,
-    post: postSchema,
-    featuredMedia: mediaSchema
+    post: postSchema
   })
 
   return contentTypeSchema
@@ -46,9 +42,7 @@ function createSchema (name, idAttribute) {
 
 /** Populate the cache of schemas for built-in content types. */
 function init (idAttribute) {
-  if (typeof idAttribute !== 'string') {
-    throw new Error(`Expecting idAttribute to be a string, got "${typeof idAttribute}".`)
-  }
+  invariants.isString('idAttribute', idAttribute)
 
   if (schemas) return schemas
 
@@ -73,13 +67,11 @@ function init (idAttribute) {
   })
 
   pageSchema.define({
-    author: userSchema,
-    featuredMedia: mediaSchema
+    author: userSchema
   })
 
   postSchema.define({
     author: userSchema,
-    featuredMedia: mediaSchema,
     categories: arrayOf(categorySchema),
     tags: arrayOf(tagSchema)
   })
