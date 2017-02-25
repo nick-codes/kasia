@@ -7,7 +7,7 @@ import contentTypesManager from './util/contentTypesManager'
 import queryCounter from './util/queryCounter'
 import { setWP } from './wpapi'
 import { watchRequests } from './redux/sagas'
-import { rewind as connectRewind } from './connect'
+import { rewind } from './connect'
 import { runSagas as _runSagas, preload, preloadQuery } from './util/preload'
 
 export default kasia
@@ -22,8 +22,8 @@ const COMPONENTS_BASE = {
 
 /** Reset the internal query counter and first mount bool.
  *  Should be called before each SSR. */
-kasia.rewind = function rewind () {
-  connectRewind()
+kasia.rewind = function () {
+  rewind()
   queryCounter.reset()
 }
 
@@ -35,22 +35,24 @@ function runSagas (store, sagas) {
 
 /**
  * Configure Kasia.
- * @param {Object|Promise} WP node-wpapi site or autodiscovery promise (deprecated)
- * @param {Object|Promise} wpapi node-wpapi site or autodiscovery promise
- * @param {String} [keyEntitiesBy] Property used to key entities in the store
- * @param {Boolean} [debug] Log debug statements
- * @param {Array} [plugins] Kasia plugins
- * @param {Array} [contentTypes] Custom content type definition objects
- * @returns {Object} Kasia reducer
+ * @param {Object|Promise} opts.WP node-wpapi site or autodiscovery promise (deprecated)
+ * @param {Object|Promise} opts.wpapi node-wpapi site or autodiscovery promise
+ * @param {String} [opts.keyEntitiesBy] Property used to key entities in the store
+ * @param {Boolean} [opts.debug] Log debug statements
+ * @param {Array} [opts.plugins] Kasia plugins
+ * @param {Array} [opts.contentTypes] Custom content type definition objects
+ * @returns {Object} Kasia components
  */
-function kasia ({
-  WP,
-  wpapi,
-  debug: _debug = false,
-  keyEntitiesBy = 'id',
-  plugins = [],
-  contentTypes = []
-}) {
+function kasia (opts = {}) {
+  const {
+    WP,
+    wpapi,
+    debug: _debug = false,
+    keyEntitiesBy = 'id',
+    plugins = [],
+    contentTypes = []
+  } = opts
+
   if (WP) {
     console.log('[kasia] config option `WP` is replaced by `wpapi` in v4.')
     wpapi = WP
@@ -69,8 +71,13 @@ function kasia ({
 
   setWP(wpapi)
 
-  if (usingAutodiscovery) wpapi.then(contentTypesManager.registerFromInstance)
-  else contentTypes.forEach(contentTypesManager.register)
+  if (usingAutodiscovery) {
+    debug('using autodiscovery for custom content types')
+    wpapi.then(contentTypesManager.registerFromInstance)
+  } else if (contentTypes.length) {
+    debug('using manual registration of custom content types')
+    contentTypes.forEach(contentTypesManager.register)
+  }
 
   // Merge plugins into internal sagas array and reducers object
   const { sagas, reducers } = plugins.reduce((components, p, i) => {

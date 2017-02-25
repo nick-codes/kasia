@@ -62,7 +62,7 @@ function register (contentType, registerOnInstance = true) {
 function registerFromInstance (site) {
   if (!site) return
 
-
+  console.log(Object.keys(site))
 }
 
 /** Get the options for a content type. */
