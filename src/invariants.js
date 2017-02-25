@@ -1,5 +1,5 @@
-const NODE_WPAPI_GITHUB_URL = 'http://bit.ly/2adfKKg'
-const KASIA_URL = 'http://kasia.io'
+const NODE_WPAPI_GITHUB_URL = 'bit.ly/2adfKKg'
+const KASIA_URL = 'kasia.io'
 
 function invariant (predicate, message, ...args) {
   if (!predicate) {
@@ -10,20 +10,22 @@ function invariant (predicate, message, ...args) {
   }
 }
 
-function typeCheck (type, name, value) {
-  invariant(
-    type === 'array' ? Array.isArray(value) : typeof value === type,
-    'Expecting %s to be %s, got %s.',
-    name, type, typeof value
-  )
+function typeCheck (type) {
+  return function (name, value) {
+    invariant(
+      type === 'array' ? Array.isArray(value) : typeof value === type,
+      'Expecting %s to be %s, got %s.',
+      name, type, typeof value
+    )
+  }
 }
 
 export default {
-  isObject: typeCheck.bind(null, 'object'),
-  isString: typeCheck.bind(null, 'string'),
-  isFunction: typeCheck.bind(null, 'function'),
-  isBoolean: typeCheck.bind(null, 'boolean'),
-  isArray: typeCheck.bind(null, 'array'),
+  isObject: typeCheck('object'),
+  isString: typeCheck('string'),
+  isFunction: typeCheck('function'),
+  isBoolean: typeCheck('boolean'),
+  isArray: typeCheck('array'),
   isOk: (value, message) => invariant(value, message),
   isPlugin: (name, value) => invariant(
     typeof value === 'function',
@@ -39,7 +41,7 @@ export default {
     NODE_WPAPI_GITHUB_URL
   ),
   isIdentifierArg: (identifier) => invariant(
-    typeof identifier === 'function' || typeof identifier === 'string' || typeof identifier === 'number',
+    ['function', 'string', 'number'].indexOf(typeof identifier) !== -1,
     'Expecting id given to connectWpPost to be function/string/number, got %s.',
     typeof identifier
   ),

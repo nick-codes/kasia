@@ -31,7 +31,7 @@ describe('autodiscovery', () => {
     const types = contentTypesManager.getAll()
 
     //TODO complete expect
-    expect(types.blogPosts).toEqual({
+    expect(types.get('blogPosts')).toEqual({
       namespace: WpApiNamespace,
       name: 'blogPosts',
       plural: 'blogPosts',
