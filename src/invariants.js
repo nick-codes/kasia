@@ -103,7 +103,7 @@ export default {
   ),
   instanceHasCustomContentTypeMethod: (wpapi, typeMethod, typeName) => invariant(
     typeof wpapi[typeMethod] === 'function',
-    'Method for %s does not exist on node-wpapi instance for "%s" content type.',
+    'Method `%s` does not exist on node-wpapi instance for "%s" content type.',
     typeMethod, typeName
   )
 }
