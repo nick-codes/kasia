@@ -24,6 +24,7 @@ export default {
   isFunction: typeCheck.bind(null, 'function'),
   isBoolean: typeCheck.bind(null, 'boolean'),
   isArray: typeCheck.bind(null, 'array'),
+  isOk: (value, message) => invariant(value, message),
   isPlugin: (name, value) => invariant(
     typeof value === 'function',
     'Expecting %s to be function, got %s. ' +
@@ -31,9 +32,9 @@ export default {
     'think there might be a problem with it.',
     name, typeof value
   ),
-  isWpApiInstance: (value = {}) => invariant(
-    typeof (value.then || value.registerRoute) === 'function',
-    'Expecting WP to be instance of `node-wpapi`. ' +
+  isNodeWpapiInstance: (wpapi = {}) => invariant(
+    wpapi && typeof (wpapi.then || wpapi.registerRoute) === 'function',
+    'Expecting WP to be instance of `node-wpapi` or discovery promise. ' +
     `See documentation: ${NODE_WPAPI_GITHUB_URL}.`
   ),
   isIdentifierArg: (identifier) => invariant(
@@ -84,7 +85,7 @@ export default {
     'Expecting keyEntitiesBy to be "slug" or "id", got "%s".',
     keyEntitiesBy
   ),
-  notDiscoveryAndContentTypes: (wpapi, contentTypes) => invariant(
+  isOneOfAutoOrManualCustomContentTypeRegistration: (wpapi, contentTypes) => invariant(
     typeof wpapi.then === 'function' && !contentTypes.length ||
     typeof wpapi.then !== 'function' && contentTypes.length,
     'You must use only one of custom content type registration or autodiscovery.'

@@ -35,38 +35,37 @@ function runSagas (store, sagas) {
 
 /**
  * Configure Kasia.
- * @param {Object|Promise} opts.wpapi node-wpapi site or autodiscovery promise
- * @param {String} [opts.keyEntitiesBy] Property used to key entities in the store
- * @param {Boolean} [opts.debug] Log debug statements
- * @param {Array} [opts.plugins] Kasia plugins
- * @param {Array} [opts.contentTypes] Custom content type definition objects
+ * @param {Object|Promise} WP node-wpapi site or autodiscovery promise (deprecated)
+ * @param {Object|Promise} wpapi node-wpapi site or autodiscovery promise
+ * @param {String} [keyEntitiesBy] Property used to key entities in the store
+ * @param {Boolean} [debug] Log debug statements
+ * @param {Array} [plugins] Kasia plugins
+ * @param {Array} [contentTypes] Custom content type definition objects
  * @returns {Object} Kasia reducer
  */
-function kasia (opts = {}) {
-  let {
-    WP,
-    wpapi,
-    debug: _debug = false,
-    keyEntitiesBy = 'id',
-    plugins = [],
-    contentTypes = []
-  } = opts
-
-  debug.toggle(_debug)
-  debug('initialised with: ', opts)
-
+function kasia ({
+  WP,
+  wpapi,
+  debug: _debug = false,
+  keyEntitiesBy = 'id',
+  plugins = [],
+  contentTypes = []
+}) {
   if (WP) {
     console.log('[kasia] config option `WP` is replaced by `wpapi` in v4.')
     wpapi = WP
   }
 
-  const usingAutodiscovery = typeof wpapi.then === 'function'
+  debug.toggle(_debug)
+  debug('initialised with: ', opts)
 
-  invariants.isWpApiInstance(wpapi)
-  invariants.notDiscoveryAndContentTypes(wpapi, contentTypes)
+  invariants.isNodeWpapiInstance(wpapi)
+  invariants.isOneOfAutoOrManualCustomContentTypeRegistration(wpapi, contentTypes)
   invariants.isKeyEntitiesByOption(keyEntitiesBy)
   invariants.isArray('plugins', plugins)
   invariants.isArray('contentTypes', contentTypes)
+
+  const usingAutodiscovery = typeof wpapi.then === 'function'
 
   setWP(wpapi)
 
