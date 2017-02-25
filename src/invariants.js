@@ -34,8 +34,9 @@ export default {
   ),
   isNodeWpapiInstance: (wpapi = {}) => invariant(
     wpapi && typeof (wpapi.then || wpapi.registerRoute) === 'function',
-    'Expecting WP to be instance of `node-wpapi` or discovery promise. ' +
-    `See documentation: ${NODE_WPAPI_GITHUB_URL}.`
+    'Expecting wpapi to be instance or promise of `node-wpapi`. ' +
+    'See documentation: %s',
+    NODE_WPAPI_GITHUB_URL
   ),
   isIdentifierArg: (identifier) => invariant(
     typeof identifier === 'function' || typeof identifier === 'string' || typeof identifier === 'number',
@@ -47,7 +48,8 @@ export default {
     typeof obj.plural === 'string' &&
     typeof obj.slug === 'string',
     'Invalid content type object. ' +
-    `See documentation: ${KASIA_URL}.`
+    'See documentation: %s.',
+    KASIA_URL
   ),
   isValidContentType: (contentTypeOptions, name, checkStr) => invariant(
     typeof contentTypeOptions !== 'undefined',
