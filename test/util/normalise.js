@@ -20,55 +20,55 @@ function setup () {
 
   return {
     [ContentTypes.Category]: {
-      // The expected entity collections on the store
-      collections: ['categories'],
+      // The expected entity collection on the store
+      collection: 'categories',
       // Whether to test normalisation by 'id' attr.
       testKeyById,
       // Whether to test normalisation by 'slug' attr.
       testKeyBySlug
     },
     [ContentTypes.Comment]: {
-      collections: ['comments'],
+      collection: 'comments',
       testKeyById
     },
     [ContentTypes.Media]: {
-      collections: ['media'],
+      collection: 'media',
       testKeyById
     },
     [ContentTypes.Page]: {
-      collections: ['pages'],
+      collection: 'pages',
       testKeyById,
       testKeyBySlug
     },
     [ContentTypes.Post]: {
-      collections: ['posts'],
+      collection: 'posts',
       testKeyById,
       testKeyBySlug
     },
     [ContentTypes.PostStatus]: {
-      collections: ['statuses'],
+      collection: 'statuses',
       testKeyBySlug
     },
     [ContentTypes.PostType]: {
-      collections: ['types'],
+      collection: 'types',
       testKeyBySlug
     },
     [ContentTypes.Tag]: {
-      collections: ['tags'],
+      collection: 'tags',
       testKeyById,
       testKeyBySlug
     },
     [ContentTypes.Taxonomy]: {
-      collections: ['taxonomies'],
+      collection: 'taxonomies',
       testKeyBySlug
     },
     [ContentTypes.User]: {
-      collections: ['users'],
+      collection: 'users',
       testKeyById,
       testKeyBySlug
     },
     book: {
-      collections: ['books'],
+      collection: 'books',
       testKeyById,
       testKeyBySlug
     }
@@ -91,14 +91,14 @@ function fixtures (contentType) {
   }
 }
 
-describe('util/normalise', () => {
+describe('normalise', () => {
   const tests = setup()
 
   Object.keys(tests).forEach((contentType) => {
     describe('Normalise ' + contentType, () => {
       const { plural } = contentTypesManager.get(contentType)
       const { first, second, multiple } = fixtures(contentType)
-      const { collections, testKeyBySlug, testKeyById } = tests[contentType]
+      const { collection, testKeyBySlug, testKeyById } = tests[contentType]
 
       afterEach(() => schemasManager.__flush__())
 
@@ -106,7 +106,7 @@ describe('util/normalise', () => {
         it(`should normalise single "${contentType}" by id`, () => {
           const result = entities.normalise(first, 'id')
           const actual = Object.keys(result)
-          expect(actual).toEqual(collections)
+          expect(actual[0]).toEqual(collection)
         })
 
         it(`should normalise multiple "${contentType}" by id`, () => {
@@ -121,7 +121,7 @@ describe('util/normalise', () => {
         it(`should normalise single "${contentType}" by slug`, () => {
           const result = entities.normalise(first, 'slug')
           const actual = Object.keys(result)
-          expect(actual).toEqual(collections)
+          expect(actual[0]).toEqual(collection)
         })
 
         it(`should normalise multiple "${contentType}" by slug`, () => {

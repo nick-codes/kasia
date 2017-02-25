@@ -5,7 +5,7 @@ jest.disableAutomock()
 import entities from '../../src/util/entities'
 
 describe('util/entities', () => {
-  describe('pick', () => {
+  describe('#pick', () => {
     it('picks an id', () => {
       const ids = entities.pickIds([{ id: 'id' }])
       expect(ids).toEqual(['id'])
@@ -30,7 +30,7 @@ describe('util/entities', () => {
     })
   })
 
-  describe('find', () => {
+  describe('#find', () => {
     it('should be a function', () => {
       expect(typeof entities.find).toEqual('function')
     })
