@@ -44,7 +44,7 @@ function runSagas (store, sagas) {
  * @returns {Object} Kasia components
  */
 function kasia (opts = {}) {
-  const {
+  let {
     WP,
     wpapi,
     debug: _debug = false,
