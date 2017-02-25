@@ -10,32 +10,25 @@ function invariant (predicate, message, ...args) {
   }
 }
 
+function typeCheck (type, name, value) {
+  invariant(
+    type === 'array' ? Array.isArray(value) : typeof value === type,
+    'Expecting %s to be %s, got %s.',
+    name, type, typeof value
+  )
+}
+
 export default {
-  isString: (name, value) => invariant(
-    typeof value === 'string',
-    'Expecting %s to be string, got "%s".',
-    name, typeof value
-  ),
-  isFunction: (name, value) => invariant(
-    typeof value === 'function',
-    'Expecting %s to be function, got "%s".',
-    name, typeof value
-  ),
+  isObject: typeCheck.bind(null, 'object'),
+  isString: typeCheck.bind(null, 'string'),
+  isFunction: typeCheck.bind(null, 'function'),
+  isBoolean: typeCheck.bind(null, 'boolean'),
+  isArray: typeCheck.bind(null, 'array'),
   isPlugin: (name, value) => invariant(
     typeof value === 'function',
-    'Expecting %s to be function, got "%s". ' +
+    'Expecting %s to be function, got %s. ' +
     'Please file an issue with the plugin if you ' +
     'think there might be a problem with it.',
-    name, typeof value
-  ),
-  isArray: (name, value) => invariant(
-    Array.isArray(value),
-    'Expecting %s to be array, got "%s".',
-    name, typeof value
-  ),
-  isBoolean: (name, value) => invariant(
-    typeof value === 'object',
-    'Expecting %s to be boolean, got "%s".',
     name, typeof value
   ),
   isWpApiInstance: (value = {}) => invariant(
@@ -45,7 +38,7 @@ export default {
   ),
   isIdentifierArg: (identifier) => invariant(
     typeof identifier === 'function' || typeof identifier === 'string' || typeof identifier === 'number',
-    'Expecting id given to connectWpPost to be function/string/number, got "%s".',
+    'Expecting id given to connectWpPost to be function/string/number, got %s.',
     typeof identifier
   ),
   isValidContentTypeObject: (obj) => invariant(
@@ -76,10 +69,10 @@ export default {
   isIdentifierValue: (id) => invariant(
     typeof id === 'string' || typeof id === 'number',
     'The final identifier is invalid. ' +
-    'Expecting a string or number, got "%s".',
+    'Expecting a string or number, got %s.',
     typeof id
   ),
-  hasWordpressObject: (wordpress) => invariant(
+  isKasiaConfiguredStore: (wordpress) => invariant(
     wordpress,
     'No `wordpress` object on the store. ' +
     'Is your store configured correctly? ' +
@@ -94,11 +87,15 @@ export default {
   notDiscoveryAndContentTypes: (wpapi, contentTypes) => invariant(
     typeof wpapi.then === 'function' && !contentTypes.length ||
     typeof wpapi.then !== 'function' && contentTypes.length,
-    'You must use only one of manual custom content type registration or autodiscovery.'
+    'You must use only one of custom content type registration or autodiscovery.'
   ),
-  instanceHasCustomContentTypeMethod: (wpapi, typeMethod, typeName) => invariant(
+  isAvailableCustomContentTypeMethod: (wpapi, typeMethod, typeName) => invariant(
     typeof wpapi[typeMethod] === 'function',
     'Method `%s` does not exist on node-wpapi instance for "%s" content type.',
     typeMethod, typeName
+  ),
+  isEnhancedStore: (store) => invariant(
+    typeof store === 'object' && typeof store.runSaga === 'function',
+    'Expecting store to be object with `runSaga` enhancer method.'
   )
 }

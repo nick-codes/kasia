@@ -4,6 +4,6 @@ export default function debug (...args) {
   if (on) console.log('[kasia debug]', ...args)
 }
 
-export function toggleDebug (bool) {
+debug.toggle = (bool) => {
   on = bool
 }

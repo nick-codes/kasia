@@ -38,7 +38,7 @@ export function wrapQueryFn (queryFn, props, state) {
 /** Wrap component in react-redux connect. */
 function connect (cls) {
   return reduxConnect(({ wordpress }) => {
-    invariants.hasWordpressObject(wordpress)
+    invariants.isKasiaConfiguredStore(wordpress)
     return { wordpress }
   })(cls)
 }

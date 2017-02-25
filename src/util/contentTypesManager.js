@@ -43,7 +43,7 @@ function register (contentType, registerOnInstance = true) {
     ...contentType,
     route: route || `/${slug}/(?P<id>)`,
     call: (wpapi, id) => {
-      invariants.instanceHasCustomContentTypeMethod(wpapi, typeMethod, name)
+      invariants.isAvailableCustomContentTypeMethod(wpapi, typeMethod, name)
       return wpapi[typeMethod](id).embed().get()
     }
   }

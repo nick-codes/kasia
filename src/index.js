@@ -1,18 +1,18 @@
 import * as effects from 'redux-saga/effects'
 
-import debug, { toggleDebug } from './util/debug'
+import debug from './util/debug'
 import makeReducer from './redux/reducer'
 import invariants from './invariants'
 import contentTypesManager from './util/contentTypesManager'
 import queryCounter from './util/queryCounter'
-import { default as _runSagas } from './util/runSagas'
 import { setWP } from './wpapi'
 import { watchRequests } from './redux/sagas'
 import { rewind as connectRewind } from './connect'
-
-export * from './util/preload'
+import { runSagas as _runSagas, preload, preloadQuery } from './util/preload'
 
 export default kasia
+
+export { runSagas, preload, preloadQuery }
 
 // Components of the toolset that are extensible via plugins
 const COMPONENTS_BASE = {
@@ -28,14 +28,14 @@ kasia.rewind = function rewind () {
 }
 
 /** Run all `sagas` until they are complete. */
-export function runSagas (store, sagas) {
+function runSagas (store, sagas) {
   kasia.rewind()
   return _runSagas(store, sagas)
 }
 
 /**
  * Configure Kasia.
- * @param {Object|Promise} opts.wpapi Instance of node-wpapi
+ * @param {Object|Promise} opts.wpapi node-wpapi site or autodiscovery promise
  * @param {String} [opts.keyEntitiesBy] Property used to key entities in the store
  * @param {Boolean} [opts.debug] Log debug statements
  * @param {Array} [opts.plugins] Kasia plugins
@@ -48,11 +48,11 @@ function kasia (opts = {}) {
     wpapi,
     debug: _debug = false,
     keyEntitiesBy = 'id',
-    plugins: userPlugins = [],
+    plugins = [],
     contentTypes = []
   } = opts
 
-  toggleDebug(_debug)
+  debug.toggle(_debug)
   debug('initialised with: ', opts)
 
   if (WP) {
@@ -65,7 +65,7 @@ function kasia (opts = {}) {
   invariants.isWpApiInstance(wpapi)
   invariants.notDiscoveryAndContentTypes(wpapi, contentTypes)
   invariants.isKeyEntitiesByOption(keyEntitiesBy)
-  invariants.isArray('plugins', userPlugins)
+  invariants.isArray('plugins', plugins)
   invariants.isArray('contentTypes', contentTypes)
 
   setWP(wpapi)
@@ -74,7 +74,7 @@ function kasia (opts = {}) {
   else contentTypes.forEach(contentTypesManager.register)
 
   // Merge plugins into internal sagas array and reducers object
-  const { sagas, reducers } = userPlugins.reduce((components, p, i) => {
+  const { sagas, reducers } = plugins.reduce((components, p, i) => {
     const isArr = p instanceof Array
     invariants.isPlugin('plugin at index ' + i, isArr ? p[0] : p)
     const { sagas = [], reducers = {} } = isArr ? p[0](wpapi, p[1] || {}, opts) : p(wpapi, {}, opts)
