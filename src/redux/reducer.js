@@ -2,7 +2,7 @@ import merge from 'lodash.merge'
 import isNode from 'is-node-fn'
 
 import entities from '../util/entities'
-import { ActionTypes } from '../constants'
+import ActionTypes from './ActionTypes'
 
 export const INITIAL_STATE = {
   // WP-API request/response metadata are stored here

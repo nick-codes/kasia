@@ -7,8 +7,8 @@ export default function getWP () {
   return WP
 }
 
-export function setWP (_WP) {
-  WP = Promise.resolve(_WP).then((wpapi) => {
+export function setWP (value) {
+  WP = Promise.resolve(value).then((wpapi) => {
     // Check again that we have a `node-wpapi` instance if what
     // we were passed originally was a Promise from discovery
     invariants.isNodeWpapiInstance(wpapi)

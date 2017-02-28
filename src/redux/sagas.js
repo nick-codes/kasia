@@ -2,8 +2,8 @@ import { takeEvery } from 'redux-saga'
 import { call, put } from 'redux-saga/effects'
 
 import getWP from '../wpapi'
-import contentTypesManager from '../util/contentTypesManager'
-import { ActionTypes } from '../constants'
+import contentTypes from '../contentTypes'
+import ActionTypes from '../redux/ActionTypes'
 import { acknowledgeRequest, completeRequest, failRequest } from './actions'
 
 /** Make a fetch request to the WP-API and record result in the store. */
@@ -17,7 +17,7 @@ export function * fetch (action) {
     if (action.type === ActionTypes.RequestCreateQuery) {
       data = yield call(action.queryFn, wpapi)
     } else {
-      const options = contentTypesManager.get(action.contentType)
+      const options = contentTypes.get(action.contentType)
       data = yield fn(options.call, wpapi, action.id)
     }
 

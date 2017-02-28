@@ -17,7 +17,7 @@ import { mount } from 'enzyme'
 import './__mocks__/WP'
 import kasia from '../src'
 import queryCounter from '../src/util/queryCounter'
-import schemasManager from '../src/util/schemasManager'
+import schemas from '../src/schemas'
 import { ActionTypes } from '../src/constants'
 import { fetch } from '../src/redux/sagas'
 
@@ -67,7 +67,7 @@ describe('Universal journey', function () {
       }
 
       it('SERVER', () => {
-        schemasManager.__flush__()
+        schemas.__flush__()
         newStore() // we would create new store for each request
         queryCounter.reset()
         isNode.mockReturnValue(true)

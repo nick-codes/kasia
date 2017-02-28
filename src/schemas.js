@@ -1,7 +1,7 @@
 import { Schema, arrayOf } from 'normalizr'
 
-import invariants from '../invariants'
-import { ContentTypes, ContentTypesPlural } from '../constants'
+import invariants from './invariants'
+import { ContentTypes, ContentTypesPlural } from './constants'
 
 const api = { __flush__, getAll, createSchema, init }
 

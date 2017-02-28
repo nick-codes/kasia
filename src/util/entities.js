@@ -2,8 +2,8 @@ import pickToArray from 'pick-to-array'
 import { normalize, arrayOf } from 'normalizr'
 import merge from 'lodash.merge'
 
-import schemasManager from './schemasManager'
-import contentTypesManager from './contentTypesManager'
+import schemasManager from '../schemas'
+import contentTypes from '../contentTypes'
 import { ContentTypesWithoutId } from '../constants'
 
 const api = { pickIds, find, normalise }
@@ -18,7 +18,7 @@ function pickIds (response) {
 
     // Accommodate content types that do not have an `id` property
     ;[].concat(response).forEach((entity) => {
-    const type = contentTypesManager.derive(entity)
+    const type = contentTypes.derive(entity)
     if (ContentTypesWithoutId.includes(type)) {
       entityIdentifiers.push(...pickToArray(entity, 'slug'))
     }
@@ -63,7 +63,7 @@ function normalise (response, idAttribute) {
   const schemas = schemasManager.getAll() || schemasManager.init(idAttribute)
 
   return [].concat(response).reduce((entities, entity) => {
-    const type = contentTypesManager.derive(entity)
+    const type = contentTypes.derive(entity)
 
     if (!type) {
       console.log(

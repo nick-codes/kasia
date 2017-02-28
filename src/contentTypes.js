@@ -2,9 +2,9 @@ import wpFilterMixins from 'wpapi/lib/mixins/filters'
 import wpParamMixins from 'wpapi/lib/mixins/parameters'
 import humps from 'humps'
 
-import getWP from '../wpapi'
-import invariants from '../invariants'
-import { WpApiNamespace, ContentTypes, ContentTypesPlural } from '../constants'
+import getWP from './wpapi'
+import invariants from './invariants'
+import { WpApiNamespace, ContentTypes, ContentTypesPlural } from './constants'
 
 export default { register, registerFromInstance, get, getAll, derive }
 

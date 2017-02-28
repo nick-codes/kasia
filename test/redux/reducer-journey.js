@@ -14,7 +14,7 @@ import kasia from '../../src'
 import normalise from '../../src/util/normalise'
 import queryCounter from '../../src/util/queryCounter'
 import pickEntityIds from '../../src/util/pickEntityIds'
-import schemasManager from '../../src/util/schemasManager'
+import schemas from '../../src/schemas'
 import { ContentTypes } from '../../src/constants'
 import { createPostRequest, completeRequest, failRequest } from '../../src/redux/actions'
 
@@ -38,7 +38,7 @@ describe('reducer journey', () => {
 
   beforeEach(() => {
     queryCounter.reset()
-    schemasManager.__flush__()
+    schemas.__flush__()
   })
 
   tests.forEach(([ keyEntitiesBy, param ]) => {

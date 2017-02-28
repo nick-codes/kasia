@@ -3,7 +3,7 @@ import * as effects from 'redux-saga/effects'
 import debug from './util/debug'
 import makeReducer from './redux/reducer'
 import invariants from './invariants'
-import contentTypesManager from './util/contentTypesManager'
+import contentTypes from './contentTypes'
 import queryCounter from './util/queryCounter'
 import { setWP } from './wpapi'
 import { watchRequests } from './redux/sagas'
@@ -73,10 +73,10 @@ function kasia (opts = {}) {
 
   if (usingAutodiscovery) {
     debug('using autodiscovery for custom content types')
-    wpapi.then(contentTypesManager.registerFromInstance)
+    wpapi.then(contentTypes.registerFromInstance)
   } else if (contentTypes.length) {
     debug('using manual registration of custom content types')
-    contentTypes.forEach(contentTypesManager.register)
+    contentTypes.forEach(contentTypes.register)
   }
 
   // Merge plugins into internal sagas array and reducers object

@@ -4,7 +4,7 @@ jest.disableAutomock()
 
 import kasia from '../src'
 import getWP from '../src/wpapi'
-import contentTypesManager from '../src/util/contentTypesManager'
+import contentTypes from '../src/util/contentTypes'
 import { WpApiNamespace } from '../src/constants'
 
 describe('autodiscovery', () => {
@@ -29,7 +29,7 @@ describe('autodiscovery', () => {
       })
     })
 
-    const types = contentTypesManager.getAll()
+    const types = contentTypes.getAll()
 
     //TODO complete expect
     expect(types.get('blogPosts')).toEqual({

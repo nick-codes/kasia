@@ -1,19 +1,7 @@
-// WP-API namespace (`wp-json/${namespace}`)
+// The WP-API's own namespace (`wp-json/${namespace}`)
 export const WpApiNamespace = 'wp/v2'
 
-export const ActionTypes = {
-  // Initiate a request to the WP API
-  RequestCreatePost: 'kasia/REQUEST_CREATE_POST',
-  RequestCreateQuery: 'kasia/REQUEST_CREATE_QUERY',
-  // Place record of a request in the store
-  AckRequest: 'kasia/ACK_REQUEST',
-  // Place the result of a request on the store
-  RequestComplete: 'kasia/REQUEST_COMPLETE',
-  // Record the failure of a request on the store
-  RequestFail: 'kasia/REQUEST_FAILED'
-}
-
-// The built-in content types available in WordPress.
+// Built-in content types available in WordPress.
 export const ContentTypes = {
   Category: 'category',
   Comment: 'comment',
@@ -28,8 +16,7 @@ export const ContentTypes = {
   User: 'user'
 }
 
-// Plural names of the built-in content types. These are used in determining the
-// wpapi method to call when fetching a content type's respective data.
+// Plural names of the built-in content types.
 export const ContentTypesPlural = {
   [ContentTypes.Category]: 'categories',
   [ContentTypes.Comment]: 'comments',

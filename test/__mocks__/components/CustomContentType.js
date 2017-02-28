@@ -4,10 +4,10 @@ jest.disableAutomock()
 
 import React, { Component } from 'react'
 
-import contentTypesManager from '../../../src/util/contentTypesManager'
+import contentTypes from '../../../src/contentTypes'
 import { connectWpPost } from '../../../src/connect'
 
-contentTypesManager.register({
+contentTypes.register({
   name: 'book',
   plural: 'books',
   slug: 'books'

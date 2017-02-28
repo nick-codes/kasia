@@ -1,4 +1,4 @@
-import { ActionTypes } from '../constants'
+import ActionTypes from './ActionTypes'
 
 /** Initiate a request for a single entity from the WP-API. */
 export const createPostRequest = (contentType, identifier) =>

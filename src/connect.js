@@ -2,7 +2,7 @@ import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import debug from './util/debug'
-import contentTypesManager from './util/contentTypesManager'
+import contentTypes from './contentTypes'
 import invariants from './invariants'
 import queryCounter from './util/queryCounter'
 import entities from './util/entities'
@@ -169,7 +169,7 @@ export function connectWpPost (contentType, id) {
   invariants.isString('contentType', contentType)
   invariants.isIdentifierArg(id)
 
-  const typeConfig = contentTypesManager.get(contentType)
+  const typeConfig = contentTypes.get(contentType)
 
   return (target) => {
     const displayName = target.displayName || target.name
