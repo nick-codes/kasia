@@ -56,7 +56,6 @@ export default class extends React.Component () {
 }
 ```
 
-
 ## Features
 
 - Declaratively connect React components to data from WordPress.
@@ -138,7 +137,7 @@ const sagaMiddleware = createSagaMiddleware()
 
 export default function configureStore (initialState) {
   const middleware = applyMiddleware(sagaMiddleware)
-  const store = createStore(rootReducer, initialState, middleware ) 
+  const store = createStore(rootReducer, initialState, middleware)
   sagaMiddleware.run(rootSaga)
   return store
 }
@@ -164,7 +163,7 @@ The `options` object accepts:
 
 - `wpapi` {wpapi}
 
-    An instance of `node-wpapi`.
+    An instance of `node-wpapi` or `WPAPI.discovery` Promise.
     
 - `keyEntitiesBy` {String} _(optional, default=`'id'`)_
 
@@ -225,21 +224,23 @@ See the end of each example for the alternative Higher Order Component approach.
 
 Connect a component to a single entity in WordPress, e.g. Post, Page, or custom content type. 
 
-- __contentType__ {String} The content type to fetch
-- __identifier__ {String|Number|Function} ID of the entity to fetch or function that derives it from `props`
+- __contentType__ {String} The content type to fetch: the singular name of a content type, or 
+when using autodiscovery, the plural name of the content type (i.e. method on the `node-wpapi` instance)
 
-Returns a connected component.
+- __identifier__ {String|Number|Function} ID or slug of the entity to fetch or function that derives it from `props`
+
+Returns a connected component. 
 
 Example, using identifier derived from route parameter on `props`:
 
 ```js
-import React, { Component } from 'react'
+import React from 'react'
 import { Route } from 'react-router'
 import { connectWpPost } from 'kasia/connect'
 import { Page } from 'kasia/types'
 
 @connectWpPost(Page, (props) => props.params.slug)
-export default class Page extends Component {
+export default class Page extends React.Component {
   render () {
     const { query, page } = this.props.kasia
 
@@ -272,7 +273,7 @@ normalised structure as described in [The Shape of Things](#the-shape-of-things)
 Example, fetching the most recent "News" entities:
 
 ```js
-import React, { Component } from 'react'
+import React  from 'react'
 import { Route } from 'react-router'
 import { connectWpPost } from 'kasia/connect'
 
@@ -280,7 +281,7 @@ import { connectWpPost } from 'kasia/connect'
 @connectWpQuery((wpapi, props) => {
   return wpapi.news().month(props.month).embed().get()
 })
-export default class RecentNews extends Component {
+export default class RecentNews extends React.Component {
   render () {
     const {
       query,

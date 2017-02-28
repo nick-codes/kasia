@@ -1,6 +1,7 @@
 const NODE_WPAPI_GITHUB_URL = 'bit.ly/2adfKKg'
 const KASIA_URL = 'kasia.io'
 
+/** Assert `predicate` is true, throw with `message` otherwise. */
 function invariant (predicate, message, ...args) {
   if (!predicate) {
     const interpolated = args.reduce((str, arg) => str.replace(/%s/, arg), message)
@@ -10,6 +11,7 @@ function invariant (predicate, message, ...args) {
   }
 }
 
+/** Create a function to assert the type of a value. */
 function typeCheck (type) {
   return function (name, value) {
     invariant(
