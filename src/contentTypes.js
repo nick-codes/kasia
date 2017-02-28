@@ -3,7 +3,7 @@ import wpParamMixins from 'wpapi/lib/mixins/parameters'
 import humps from 'humps'
 
 import getWP from './wpapi'
-import invariants from './invariants'
+import invariants from './util/invariants'
 import { WpApiNamespace, ContentTypes, ContentTypesPlural } from './constants'
 
 export default { register, registerFromInstance, get, getAll, derive }

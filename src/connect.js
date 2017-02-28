@@ -3,7 +3,7 @@ import { connect as reduxConnect } from 'react-redux'
 
 import debug from './util/debug'
 import contentTypes from './contentTypes'
-import invariants from './invariants'
+import invariants from './util/invariants'
 import queryCounter from './util/queryCounter'
 import entities from './util/entities'
 import { createPostRequest, createQueryRequest } from './redux/actions'

@@ -2,7 +2,7 @@ import * as effects from 'redux-saga/effects'
 
 import debug from './util/debug'
 import makeReducer from './redux/reducer'
-import invariants from './invariants'
+import invariants from './util/invariants'
 import contentTypes from './contentTypes'
 import queryCounter from './util/queryCounter'
 import { setWP } from './wpapi'

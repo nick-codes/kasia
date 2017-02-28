@@ -1,6 +1,6 @@
 import { put, join, fork } from 'redux-saga/effects'
 
-import invariants from '../invariants'
+import invariants from './invariants'
 import { completeRequest } from '../redux/actions'
 
 /** Make a preloader saga for all Kasia components within the `components` array. */
