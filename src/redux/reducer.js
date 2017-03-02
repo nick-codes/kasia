@@ -17,11 +17,11 @@ export const INITIAL_STATE = {
  * @param {Function} normaliser Function to normalise response data
  * @returns {Object} Reducer object
  */
-function mergeNativeAndThirdPartyReducers (reducers, normaliser) {
+export function _mergeNativeAndThirdPartyReducers (reducers, normaliser) {
   const baseReducer = {
-    [ActionTypes.RequestAcknowledge]: [acknowledgeReducer],
-    [ActionTypes.RequestComplete]: [completeReducer(normaliser)],
-    [ActionTypes.RequestFail]: [failReducer]
+    [ActionTypes.RequestAcknowledge]: [_acknowledgeReducer],
+    [ActionTypes.RequestComplete]: [_completeReducer(normaliser)],
+    [ActionTypes.RequestFail]: [_failReducer]
   }
 
   // Group reducers by their action type
@@ -54,7 +54,7 @@ function mergeNativeAndThirdPartyReducers (reducers, normaliser) {
 
 // ACKNOWLEDGE
 // Place record of request o
-export function acknowledgeReducer (state, action) {
+export function _acknowledgeReducer (state, action) {
   return merge({}, state, {
     queries: {
       [action.id]: {
@@ -69,7 +69,7 @@ export function acknowledgeReducer (state, action) {
 
 // COMPLETE
 // Place entity on the store; update query record if for component (has an id)
-export function completeReducer (normalise) {
+export function _completeReducer (normalise) {
   return (state_, action) => {
     const state = merge({}, state_)
 
@@ -98,7 +98,7 @@ export function completeReducer (normalise) {
 
 // FAIL
 // Update query record only
-export function failReducer (state, action) {
+export function _failReducer (state, action) {
   return merge({}, state, {
     queries: {
       [action.id]: {
@@ -120,7 +120,7 @@ export function failReducer (state, action) {
  */
 export default function createReducer ({ keyEntitiesBy, reducers }) {
   const normaliser = (data) => entities.normalise(data, keyEntitiesBy)
-  const reducer = mergeNativeAndThirdPartyReducers(reducers, normaliser)
+  const reducer = _mergeNativeAndThirdPartyReducers(reducers, normaliser)
   const initialState = { ...INITIAL_STATE, keyEntitiesBy }
 
   return {
