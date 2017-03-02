@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import kasia from '../src'
 import getWP from '../src/wpapi'
 import contentTypes, { _makeWpapiMethodCaller } from '../src/contentTypes'

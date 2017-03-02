@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import React from 'react'
 import merge from 'lodash.merge'
 import { mount } from 'enzyme'

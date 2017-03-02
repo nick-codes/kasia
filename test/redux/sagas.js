@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import { put, call } from 'redux-saga/effects'
 
 import '../__mocks__/wpapi'

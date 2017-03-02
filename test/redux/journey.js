@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 jest.mock('redux-saga')
 
 import { combineReducers, createStore } from 'redux'

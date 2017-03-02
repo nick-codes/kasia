@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import '../__mocks__/wpapi'
 import postJson from '../__fixtures__/wp-api-responses/post'
 import { INITIAL_STATE, _acknowledgeReducer, _completeReducer, _failReducer } from '../../src/redux/reducer'

@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 // we need to mock client and server environments
 jest.mock('is-node-fn')
 

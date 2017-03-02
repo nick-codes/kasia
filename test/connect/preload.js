@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import queryCounter from '../../src/util/queryCounter'
 import ActionTypes from '../../src/redux/ActionTypes'
 import { ContentTypes } from '../../src/constants'

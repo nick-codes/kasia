@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import { join, fork } from 'redux-saga/effects'
 import { createMockTask } from 'redux-saga/utils'
 

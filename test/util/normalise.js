@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import '../__mocks__/wpapi'
 import entities from '../../src/util/entities'
 import contentTypes from '../../src/contentTypes'

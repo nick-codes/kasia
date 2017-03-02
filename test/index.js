@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import { wpapi } from './__mocks__/wpapi'
 import kasia, { preload, preloadQuery } from '../src'
 

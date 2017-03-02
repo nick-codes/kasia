@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import entities from '../../src/util/entities'
 
 describe('util/entities', () => {

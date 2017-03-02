@@ -1,7 +1,3 @@
-/* global jest:false */
-
-jest.disableAutomock()
-
 import React, { Component } from 'react'
 
 import { connectWpQuery } from '../../../src/connect'

@@ -1,7 +1,3 @@
-/* global jest:false, expect:false */
-
-jest.disableAutomock()
-
 import WPAPI from 'wpapi'
 import { combineReducers, createStore } from 'redux'
 import { spawn } from 'redux-saga/effects'

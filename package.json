@@ -81,7 +81,7 @@
     ]
   },
   "jest": {
-    "automock": true,
+    "automock": false,
     "verbose": true,
     "testRegex": "/test/.*\\.js$",
     "unmockedModulePathPatterns": [
