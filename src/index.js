@@ -7,12 +7,17 @@ import contentTypes from './contentTypes'
 import queryCounter from './util/queryCounter'
 import { setWP } from './wpapi'
 import { watchRequests } from './redux/sagas'
-import { rewind } from './connect'
+import { rewind as connectRewind } from './connect'
 import { runSagas as _runSagas, preload, preloadQuery } from './util/preload'
 
 export default kasia
 
 export { runSagas, preload, preloadQuery }
+
+kasia.rewind = rewind
+kasia.runSagas = runSagas
+kasia.preload = preload
+kasia.preloadQuery = preloadQuery
 
 // Components of the toolset that are extensible via plugins
 const COMPONENTS_BASE = {
@@ -22,8 +27,8 @@ const COMPONENTS_BASE = {
 
 /** Reset the internal query counter and first mount bool.
  *  Should be called before each SSR. */
-kasia.rewind = function () {
-  rewind()
+function rewind () {
+  connectRewind()
   queryCounter.reset()
 }
 
@@ -31,6 +36,26 @@ kasia.rewind = function () {
 function runSagas (store, sagas) {
   kasia.rewind()
   return _runSagas(store, sagas)
+}
+
+/** Merge plugins into internal sagas array and reducers object. */
+function mergeComponents (plugins, wpapi, opts) {
+  const components = { ...COMPONENTS_BASE }
+
+  plugins.forEach((components, p, i) => {
+    const isArr = p instanceof Array
+
+    invariants.isPlugin('plugin at index ' + i, isArr ? p[0] : p)
+
+    const { sagas = [], reducers = {} } = isArr
+      ? p[0](wpapi, p[1] || {}, opts) // call plugin with user options
+      : p(wpapi, {}, opts) // call plugin without user options
+
+    components.sagas = [ ...components.sagas, ...sagas ]
+    components.reducers = { ...components.reducers, ...reducers }
+  })
+
+  return components
 }
 
 /**
@@ -79,15 +104,7 @@ function kasia (opts = {}) {
     _contentTypes.forEach(contentTypes.register)
   }
 
-  // Merge plugins into internal sagas array and reducers object
-  const { sagas, reducers } = plugins.reduce((components, p, i) => {
-    const isArr = p instanceof Array
-    invariants.isPlugin('plugin at index ' + i, isArr ? p[0] : p)
-    const { sagas = [], reducers = {} } = isArr ? p[0](wpapi, p[1] || {}, opts) : p(wpapi, {}, opts)
-    components.sagas = [ ...components.sagas, ...sagas ]
-    components.reducers = { ...components.reducers, ...reducers }
-    return components
-  }, COMPONENTS_BASE)
+  const { sagas, reducers } = mergeComponents(plugins, wpapi, opts)
 
   return {
     kasiaReducer: makeReducer({ keyEntitiesBy, reducers }),
