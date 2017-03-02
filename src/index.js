@@ -39,10 +39,11 @@ function runSagas (store, sagas) {
 }
 
 /** Merge plugins into internal sagas array and reducers object. */
-function mergeComponents (plugins, wpapi, opts) {
+function createComponents (plugins, wpapi, opts) {
+  const { keyEntitiesBy } = opts
   const components = { ...COMPONENTS_BASE }
 
-  plugins.forEach((components, p, i) => {
+  plugins.forEach((p, i) => {
     const isArr = p instanceof Array
 
     invariants.isPlugin('plugin at index ' + i, isArr ? p[0] : p)
@@ -55,7 +56,10 @@ function mergeComponents (plugins, wpapi, opts) {
     components.reducers = { ...components.reducers, ...reducers }
   })
 
-  return components
+  return {
+    kasiaReducer: makeReducer({ reducers: components.reducers, keyEntitiesBy }),
+    kasiaSagas: components.sagas.map((saga) => effects.spawn(saga))
+  }
 }
 
 /**
@@ -92,7 +96,6 @@ function kasia (opts = {}) {
   invariants.isArray('plugins', plugins)
   invariants.isArray('contentTypes', _contentTypes)
 
-  const { sagas, reducers } = mergeComponents(plugins, wpapi, opts)
   const usingAutodiscovery = typeof wpapi.then === 'function'
 
   setWP(wpapi)
@@ -105,8 +108,5 @@ function kasia (opts = {}) {
     _contentTypes.forEach(contentTypes.register)
   }
 
-  return {
-    kasiaReducer: makeReducer({ keyEntitiesBy, reducers }),
-    kasiaSagas: sagas.map((saga) => effects.spawn(saga))
-  }
+  return createComponents(plugins, wpapi, opts)
 }
