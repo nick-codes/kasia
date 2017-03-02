@@ -60,8 +60,8 @@ function mergeComponents (plugins, wpapi, opts) {
 
 /**
  * Configure Kasia.
- * @param {Object|Promise} opts.WP node-wpapi site or autodiscovery promise (deprecated)
  * @param {Object|Promise} opts.wpapi node-wpapi site or autodiscovery promise
+ * @param {Object|Promise} [opts.WP] node-wpapi site or autodiscovery promise (deprecated)
  * @param {String} [opts.keyEntitiesBy] Property used to key entities in the store
  * @param {Boolean} [opts.debug] Log debug statements
  * @param {Array} [opts.plugins] Kasia plugins
