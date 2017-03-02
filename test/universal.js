@@ -2,23 +2,21 @@
 
 jest.disableAutomock()
 
-// we mock queryBuilder after imports
 // we need to mock client and server environments
 jest.mock('is-node-fn')
 
 import React from 'react'
 import createSagaMiddleware from 'redux-saga'
 import isNode from 'is-node-fn'
-import WPAPI from 'wpapi'
 import { put } from 'redux-saga/effects'
 import { createStore as _createStore, applyMiddleware, compose, combineReducers } from 'redux'
 import { mount } from 'enzyme'
 
-import './__mocks__/WP'
 import kasia from '../src'
 import queryCounter from '../src/util/queryCounter'
-import schemas from '../src/schemas'
-import { ActionTypes } from '../src/constants'
+import ActionTypes from '../src/redux/ActionTypes'
+import { wpapi } from './__mocks__/wpapi'
+import { _flushSchemas } from '../src/schemas'
 import { fetch } from '../src/redux/sagas'
 
 import BuiltInContentType from './__mocks__/components/BuiltInContentType'
@@ -33,11 +31,7 @@ const post3 = Object.assign({}, post, { id: 18, slug: 'post-3', title: { rendere
 let returnPost
 
 function setup (keyEntitiesBy) {
-  const { kasiaReducer, kasiaSagas } = kasia({
-    wpapi: new WPAPI({ endpoint: '123' }),
-    keyEntitiesBy
-  })
-
+  const { kasiaReducer, kasiaSagas } = kasia({ wpapi, keyEntitiesBy })
   const sagaMiddleware = createSagaMiddleware()
   const createStore = compose(applyMiddleware(sagaMiddleware))(_createStore)
   const store = createStore(combineReducers(kasiaReducer), initialState(keyEntitiesBy))
@@ -67,7 +61,7 @@ describe('Universal journey', function () {
       }
 
       it('SERVER', () => {
-        schemas.__flush__()
+        _flushSchemas()
         newStore() // we would create new store for each request
         queryCounter.reset()
         isNode.mockReturnValue(true)
@@ -100,7 +94,7 @@ describe('Universal journey', function () {
         // acknowledge request
         const ackAction = {
           id: 0,
-          type: ActionTypes.AckRequest,
+          type: ActionTypes.RequestAcknowledge,
           identifier: post1[keyEntitiesBy],
           contentType: 'post'
         }

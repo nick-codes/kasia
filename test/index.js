@@ -2,7 +2,7 @@
 
 jest.disableAutomock()
 
-import { wpapi } from './__mocks__/WP'
+import { wpapi } from './__mocks__/wpapi'
 import kasia, { preload, preloadQuery } from '../src'
 
 describe('Kasia', () => {
@@ -18,7 +18,7 @@ describe('Kasia', () => {
   it('throws with bad WP value', () => {
     expect(() => {
       kasia({ wpapi: '' })
-    }).toThrowError(/Expecting WP to be instance of `node-wpapi`/)
+    }).toThrowError(/Expecting wpapi to be instance or promise/)
   })
 
   it('throws with bad plugins value', () => {
@@ -37,5 +37,11 @@ describe('Kasia', () => {
     expect(() => {
       kasia({ wpapi, contentTypes: '' })
     }).toThrowError(/Expecting contentTypes to be array/)
+  })
+
+  it('throws with both contentTypes and wpapi Promise', () => {
+    expect(() => {
+      kasia({ wpapi: Promise.resolve(), contentTypes: [{}] })
+    }).toThrowError(/You must use only one/)
   })
 })

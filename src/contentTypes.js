@@ -6,7 +6,18 @@ import getWP from './wpapi'
 import invariants from './util/invariants'
 import { WpApiNamespace, ContentTypes, ContentTypesPlural } from './constants'
 
-export default { register, registerFromInstance, get, getAll, derive }
+const api = { register, registerFromInstance, get, getAll, derive }
+
+export default api
+
+/** Create function that fetches an entity via a `node-wpapi` instance.
+ *  @private */
+export function _makeWpapiMethodCaller (typeMethod, typeName) {
+  return (wpapi, identifier) => {
+    invariants.isCustomContentTypeMethod(wpapi, typeMethod, typeName)
+    return wpapi[typeMethod](identifier).embed().get()
+  }
+}
 
 const optionsCache = new Map()
 const mixins = { ...wpFilterMixins, ...wpParamMixins }
@@ -34,28 +45,27 @@ function register (contentType, registerOnInstance = true) {
 
   const {
     namespace = WpApiNamespace,
-    name, plural, slug, route, methodName
+    name, plural, slug, methodName
   } = contentType
 
   const typeMethod = methodName || humps.camelize(plural)
 
   const options = {
     ...contentType,
-    route: route || `/${slug}/(?P<id>)`,
-    call: (wpapi, id) => {
-      invariants.isCustomContentTypeMethod(wpapi, typeMethod, name)
-      return wpapi[typeMethod](id).embed().get()
-    }
+    call: _makeWpapiMethodCaller(typeMethod, name)
   }
 
   // Only register custom types with node-wpapi instance as built-ins are already available
   if (registerOnInstance) {
     getWP().then((wpapi) => {
+      const route = contentType.route || `/${slug}/(?P<id>)`
       wpapi[methodName] = wpapi.registerRoute(namespace, route, { mixins })
     })
   }
 
+  // Key by both singular and plural for convenience
   optionsCache.set(name, options)
+  optionsCache.set(plural, options)
 }
 
 /** Register custom content types found on a `node-wpapi` instance produced by autodiscovery. */
@@ -63,19 +73,14 @@ function registerFromInstance (site) {
   if (!site) return
 
   Object.keys(site).forEach((key) => {
-    if (
-      key[0] === '_' || // ignore private properties
-      typeof value !== 'function' || // ignore non-methods
-      ContentTypesPlural[key] // ignore pre-registered built-ins
-    ) return
+    let name, plural, slug
 
-    const value = site[key]
+    name = plural = slug = site[key]
 
-    register({
-      name: value,
-      plural: value,
-      slug: value
-    }, false)
+    // Ignore private properties, non-methods, and pre-registered built-ins
+    if (key[0] !== '_' && typeof name === 'function' &&  !ContentTypesPlural[key]) {
+      register({ name, plural, slug }, false)
+    }
   })
 }
 

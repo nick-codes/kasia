@@ -7,9 +7,9 @@ import merge from 'lodash.merge'
 import { mount } from 'enzyme'
 
 import queryCounter from '../../src/util/queryCounter'
-import { ActionTypes } from '../../src/constants'
+import ActionTypes from '../../src/redux/ActionTypes'
 
-import '../__mocks__/WP'
+import '../__mocks__/wpapi'
 import stateMultipleEntities from '../__mocks__/states/multipleEntities'
 import initialState from '../__mocks__/states/initial'
 import BuiltInTypeComponent, { target } from '../__mocks__/components/BuiltInContentType'

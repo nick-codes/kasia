@@ -3,6 +3,7 @@
 import { setWP } from '../../src/wpapi'
 
 export const wpapi = {
+  posts: jest.fn(),
   registerRoute: jest.fn()
 }
 

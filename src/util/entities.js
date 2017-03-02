@@ -16,10 +16,10 @@ const isDef = (v) => typeof v !== 'undefined'
 function pickIds (response) {
   const entityIdentifiers = pickToArray(response, 'id')
 
-    // Accommodate content types that do not have an `id` property
-    ;[].concat(response).forEach((entity) => {
+  // Accommodate content types that do not have an `id` property
+  ;[].concat(response).forEach((entity) => {
     const type = contentTypes.derive(entity)
-    if (ContentTypesWithoutId.includes(type)) {
+    if (type in ContentTypesWithoutId) {
       entityIdentifiers.push(...pickToArray(entity, 'slug'))
     }
   })
@@ -88,4 +88,3 @@ function normalise (response, idAttribute) {
     return merge(entities, normalised.entities)
   }, {})
 }
-

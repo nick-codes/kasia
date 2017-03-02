@@ -5,24 +5,20 @@ jest.disableAutomock()
 jest.mock('redux-saga')
 
 import { combineReducers, createStore } from 'redux'
-import WPAPI from 'wpapi'
 
 import postJson from '../__fixtures__/wp-api-responses/post'
 import initialState from '../__mocks__/states/initial'
+import { wpapi } from '../__mocks__/wpapi'
 
 import kasia from '../../src'
-import normalise from '../../src/util/normalise'
 import queryCounter from '../../src/util/queryCounter'
-import pickEntityIds from '../../src/util/pickEntityIds'
-import schemas from '../../src/schemas'
+import entities from '../../src/util/entities'
+import { _flushSchemas } from '../../src/schemas'
 import { ContentTypes } from '../../src/constants'
 import { createPostRequest, completeRequest, failRequest } from '../../src/redux/actions'
 
 function setup (keyEntitiesBy) {
-  const { kasiaReducer } = kasia({
-    wpapi: new WPAPI({ endpoint: '123' }),
-    keyEntitiesBy
-  })
+  const { kasiaReducer } = kasia({ wpapi, keyEntitiesBy })
   const rootReducer = combineReducers(kasiaReducer)
   const store = createStore(rootReducer)
   return { store, initialState: initialState(keyEntitiesBy) }
@@ -38,7 +34,7 @@ describe('reducer journey', () => {
 
   beforeEach(() => {
     queryCounter.reset()
-    schemas.__flush__()
+    _flushSchemas()
   })
 
   tests.forEach(([ keyEntitiesBy, param ]) => {
@@ -60,13 +56,13 @@ describe('reducer journey', () => {
 
       it('can RequestComplete', () => {
         store.dispatch(completeRequest(0, postJson))
-        const expected = normalise(postJson, keyEntitiesBy)
+        const expected = entities.normalise(postJson, keyEntitiesBy)
         const actual = store.getState().wordpress.entities
         expect(actual).toEqual(expected)
       })
 
       it('places query on store', () => {
-        const entities = pickEntityIds(postJson)
+        const entities = entities.pickIds(postJson)
         const expected = { id: 0, complete: true, OK: true, paging: {}, entities, prepared: true }
         const actual = store.getState().wordpress.queries[0]
         expect(actual).toEqual(expected)

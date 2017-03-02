@@ -2,10 +2,10 @@
 
 jest.disableAutomock()
 
-import '../__mocks__/WP'
+import '../__mocks__/wpapi'
 import entities from '../../src/util/entities'
 import contentTypes from '../../src/contentTypes'
-import schemas from '../../src/schemas'
+import { _flushSchemas } from '../../src/schemas'
 import { ContentTypes } from '../../src/constants'
 
 function setup () {
@@ -100,7 +100,7 @@ describe('normalise', () => {
       const { first, second, multiple } = fixtures(contentType)
       const { collection, testKeyBySlug, testKeyById } = tests[contentType]
 
-      afterEach(() => schemas.__flush__())
+      afterEach(() => _flushSchemas())
 
       if (testKeyById) {
         it(`should normalise single "${contentType}" by id`, () => {

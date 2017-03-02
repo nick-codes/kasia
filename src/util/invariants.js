@@ -1,4 +1,3 @@
-const NODE_WPAPI_GITHUB_URL = 'bit.ly/2adfKKg'
 const KASIA_URL = 'kasia.io'
 
 /** Assert `predicate` is true, throw with `message` otherwise. */
@@ -36,11 +35,11 @@ export default {
     'think there might be a problem with it.',
     name, typeof value
   ),
-  isNodeWpapiInstance: (wpapi = {}) => invariant(
+  isNodeWpapiInstance: (wpapi) => invariant(
     wpapi && typeof (wpapi.then || wpapi.registerRoute) === 'function',
     'Expecting wpapi to be instance or promise of `node-wpapi`. ' +
     'See documentation: %s',
-    NODE_WPAPI_GITHUB_URL
+    KASIA_URL
   ),
   isIdentifierArg: (identifier) => invariant(
     ['function', 'string', 'number'].indexOf(typeof identifier) !== -1,
@@ -92,14 +91,17 @@ export default {
     keyEntitiesBy
   ),
   isOneOfAutoOrManualTypeRegistration: (wpapi, contentTypes) => invariant(
-    typeof wpapi.then === 'function' && !contentTypes.length ||
-    typeof wpapi.then !== 'function' && contentTypes.length,
+    !wpapi.then && !contentTypes.length ||
+    wpapi.then && !contentTypes.length ||
+    !wpapi.then && contentTypes.length,
     'You must use only one of custom content type registration or autodiscovery.'
   ),
   isCustomContentTypeMethod: (wpapi, typeMethod, typeName) => invariant(
     typeof wpapi[typeMethod] === 'function',
-    'Method `%s` does not exist on node-wpapi instance for "%s" content type.',
-    typeMethod, typeName
+    'Method `%s` does not exist on `node-wpapi` instance. ' +
+    'This call was made on behalf of the "%s" content type. ' +
+    'If this is a custom content type, see documentation: %s',
+    typeMethod, typeName, KASIA_URL
   ),
   isEnhancedStore: (store) => invariant(
     typeof store === 'object' && typeof store.runSaga === 'function',

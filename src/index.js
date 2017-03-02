@@ -47,10 +47,10 @@ function kasia (opts = {}) {
   let {
     WP,
     wpapi,
-    debug: _debug = false,
     keyEntitiesBy = 'id',
     plugins = [],
-    contentTypes = []
+    debug: _debug = false,
+    contentTypes: _contentTypes = []
   } = opts
 
   if (WP) {
@@ -62,10 +62,10 @@ function kasia (opts = {}) {
   debug('initialised with: ', opts)
 
   invariants.isNodeWpapiInstance(wpapi)
-  invariants.isOneOfAutoOrManualTypeRegistration(wpapi, contentTypes)
+  invariants.isOneOfAutoOrManualTypeRegistration(wpapi, _contentTypes)
   invariants.isKeyEntitiesByOption(keyEntitiesBy)
   invariants.isArray('plugins', plugins)
-  invariants.isArray('contentTypes', contentTypes)
+  invariants.isArray('contentTypes', _contentTypes)
 
   const usingAutodiscovery = typeof wpapi.then === 'function'
 
@@ -74,9 +74,9 @@ function kasia (opts = {}) {
   if (usingAutodiscovery) {
     debug('using autodiscovery for custom content types')
     wpapi.then(contentTypes.registerFromInstance)
-  } else if (contentTypes.length) {
+  } else if (_contentTypes.length) {
     debug('using manual registration of custom content types')
-    contentTypes.forEach(contentTypes.register)
+    _contentTypes.forEach(contentTypes.register)
   }
 
   // Merge plugins into internal sagas array and reducers object

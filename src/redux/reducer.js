@@ -19,7 +19,7 @@ export const INITIAL_STATE = {
  */
 function mergeNativeAndThirdPartyReducers (reducers, normaliser) {
   const baseReducer = {
-    [ActionTypes.AckRequest]: [acknowledgeReducer],
+    [ActionTypes.RequestAcknowledge]: [acknowledgeReducer],
     [ActionTypes.RequestComplete]: [completeReducer(normaliser)],
     [ActionTypes.RequestFail]: [failReducer]
   }

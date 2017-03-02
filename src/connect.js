@@ -124,7 +124,7 @@ const base = (target) => {
       // Did not find prepared query so request new data and reuse the queryId
       else if (!query) this._requestWpData(this.props, queryId)
       // Request new data with new queryId
-      else if (!query.prepared) this._requestWpData(this.props, queryCounter.next())
+      else this._requestWpData(this.props, queryCounter.next())
     }
 
     componentWillReceiveProps (nextProps) {
@@ -261,10 +261,10 @@ export function connectWpPost (contentType, id) {
  * ```
  *
  * @param {Function} queryFn Function that returns a wpapi query
- * @param {Function} shouldUpdate Inspect props to determine if new data request is made
+ * @param {Function} [shouldUpdate] Inspect props to determine if new data request is made
  * @returns {Function} Decorated component
  */
-export function connectWpQuery (queryFn, shouldUpdate) {
+export function connectWpQuery (queryFn, shouldUpdate = () => false) {
   invariants.isFunction('queryFn', queryFn)
   invariants.isFunction('shouldUpdate', shouldUpdate)
 
@@ -298,7 +298,7 @@ export function connectWpQuery (queryFn, shouldUpdate) {
         const query = this._query()
         const state = this.props.wordpress
         if (!query || !query.complete || query.error) return {}
-        else return entities.find(state.entities, state.keyEntitiesBy, query.entities)
+        return entities.find(state.entities, state.keyEntitiesBy, query.entities)
       }
     }
 

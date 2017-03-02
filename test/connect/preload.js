@@ -3,7 +3,8 @@
 jest.disableAutomock()
 
 import queryCounter from '../../src/util/queryCounter'
-import { ActionTypes, ContentTypes } from '../../src/constants'
+import ActionTypes from '../../src/redux/ActionTypes'
+import { ContentTypes } from '../../src/constants'
 import { fetch } from '../../src/redux/sagas'
 
 import BuiltInContentType from '../__mocks__/components/BuiltInContentType'

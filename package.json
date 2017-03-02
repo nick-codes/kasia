@@ -1,6 +1,6 @@
 {
   "name": "kasia",
-  "version": "4.0.23",
+  "version": "4.1.0",
   "description": "A React Redux toolset for the WordPress API",
   "main": "lib/index.js",
   "jsnext:main": "src/index.js",
@@ -61,8 +61,8 @@
     "coveralls": "2.11.15",
     "enzyme": "2.2.0",
     "in-publish": "2.0.0",
-    "jest": "18.1.0",
-    "jest-cli": "17.0.3",
+    "jest": "19.0.2",
+    "jest-cli": "19.0.2",
     "lerna": "2.0.0-beta.31",
     "react-addons-test-utils": "15.3.0",
     "redux": "3.4.0",

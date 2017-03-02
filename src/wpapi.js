@@ -1,18 +1,18 @@
 import invariants from './util/invariants'
 
-let WP
+let wpapi
 
 export default function getWP () {
-  invariants.isOk(WP, 'WP not set')
-  return WP
+  invariants.isOk(wpapi, 'WP not set')
+  return wpapi
 }
 
 export function setWP (value) {
-  WP = Promise.resolve(value).then((wpapi) => {
+  wpapi = Promise.resolve(value).then((wpapi) => {
     // Check again that we have a `node-wpapi` instance if what
     // we were passed originally was a Promise from discovery
     invariants.isNodeWpapiInstance(wpapi)
     return wpapi
   })
-  return WP
+  return wpapi
 }

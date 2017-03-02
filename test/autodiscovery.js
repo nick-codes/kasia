@@ -4,17 +4,10 @@ jest.disableAutomock()
 
 import kasia from '../src'
 import getWP from '../src/wpapi'
-import contentTypes from '../src/util/contentTypes'
+import contentTypes, { _makeWpapiMethodCaller } from '../src/contentTypes'
 import { WpApiNamespace } from '../src/constants'
 
 describe('autodiscovery', () => {
-  it('throws with both autodiscovery and manual registration', () => {
-    expect(() => kasia({
-      wpapi: Promise.resolve(true),
-      contentTypes: [{}]
-    }).toThrowError(/You must use only one/))
-  })
-
   it('sets promise as internal wpapi record', () => {
     const wpapi = Promise.resolve()
     kasia({ wpapi })
@@ -22,24 +15,22 @@ describe('autodiscovery', () => {
   })
 
   it('registers custom content types from instance', () => {
-    kasia({
-      wpapi: Promise.resolve({
-        registerRoute: () => {},
-        blogPosts: () => {}
-      })
+    const wpapi = Promise.resolve({
+      registerRoute: () => {},
+      blogPosts: () => {}
     })
 
-    const types = contentTypes.getAll()
+    kasia({ wpapi })
 
-    //TODO complete expect
-    expect(types.get('blogPosts')).toEqual({
-      namespace: WpApiNamespace,
-      name: 'blogPosts',
-      plural: 'blogPosts',
-      slug: 'blogPost',
-      route: '',
-      call: () => {}
-  })
+    return wpapi.then(() => {
+      expect(contentTypes.get('blogPosts')).toEqual({
+        namespace: WpApiNamespace,
+        name: 'blogPosts',
+        plural: 'blogPosts',
+        slug: 'blogPost',
+        call: _makeWpapiMethodCaller('blogPosts')
+      })
+    })
   })
 
   it('delays querying until discovery is complete', () => {

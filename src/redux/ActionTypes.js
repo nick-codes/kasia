@@ -3,8 +3,8 @@ const ActionTypes = {
   RequestCreatePost: 'kasia/REQUEST_CREATE_POST',
   RequestCreateQuery: 'kasia/REQUEST_CREATE_QUERY',
   // Place record of a request in the store
-  AckRequest: 'kasia/ACK_REQUEST',
-  // Place the result of a request on the store
+  RequestAcknowledge: 'kasia/REQUEST_ACKNOWLEDGE',
+  // Record the result of a request on the store
   RequestComplete: 'kasia/REQUEST_COMPLETE',
   // Record the failure of a request on the store
   RequestFail: 'kasia/REQUEST_FAILED'

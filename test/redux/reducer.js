@@ -2,7 +2,7 @@
 
 jest.disableAutomock()
 
-import '../__mocks__/WP'
+import '../__mocks__/wpapi'
 import postJson from '../__fixtures__/wp-api-responses/post'
 import { INITIAL_STATE, acknowledgeReducer, completeReducer, failReducer } from '../../src/redux/reducer'
 

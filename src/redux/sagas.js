@@ -14,11 +14,11 @@ export function * fetch (action) {
     const wpapi = yield getWP()
 
     let data
-    if (action.type === ActionTypes.RequestCreateQuery) {
-      data = yield call(action.queryFn, wpapi)
-    } else {
+    if (action.type === ActionTypes.RequestCreatePost) {
       const options = contentTypes.get(action.contentType)
-      data = yield fn(options.call, wpapi, action.id)
+      data = yield call(options.call, wpapi, action.identifier)
+    } else if (action.type === ActionTypes.RequestCreateQuery) {
+      data = yield call(action.queryFn, wpapi)
     }
 
     yield put(completeRequest(action.id, data))

@@ -4,11 +4,13 @@ jest.disableAutomock()
 
 import { put, call } from 'redux-saga/effects'
 
-import '../__mocks__/WP'
+import '../__mocks__/wpapi'
 import getWP from '../../src/wpapi'
+import ActionTypes from '../../src/redux/ActionTypes'
+import { _makeWpapiMethodCaller } from '../../src/contentTypes'
 import { createPostRequest, createQueryRequest } from '../../src/redux/actions'
 import { fetch } from '../../src/redux/sagas'
-import { ActionTypes, ContentTypes } from '../../src/constants'
+import { ContentTypes, ContentTypesPlural } from '../../src/constants'
 
 describe('redux/sagas', () => {
   describe('createPostRequest', () => {
@@ -17,7 +19,7 @@ describe('redux/sagas', () => {
 
     it('yields a put with acknowledgeRequest action', () => {
       const actual = generator.next().value
-      const expected = put({ ...action, type: ActionTypes.AckRequest })
+      const expected = put({ ...action, type: ActionTypes.RequestAcknowledge })
       expect(actual).toEqual(expected)
     })
 
@@ -26,12 +28,16 @@ describe('redux/sagas', () => {
       return expect(actual).toEqual(getWP())
     })
 
-    it('yields a call to result of buildQueryFunction', () => {
+    it('yields a call to wpapi method', () => {
+      const method = ContentTypesPlural[ContentTypes.Post]
       const actual = generator.next().value
-      const expected = call(buildQueryFunction(action), getWP())
-      actual.CALL.fn = actual.CALL.fn.toString()
-      expected.CALL.fn = expected.CALL.fn.toString()
-      expect(actual).toEqual(expected)
+
+      return getWP().then((wpapi) => {
+        const expected = call(_makeWpapiMethodCaller(method), wpapi, action.identifier)
+        actual.CALL.fn = actual.CALL.fn.toString()
+        expected.CALL.fn = expected.CALL.fn.toString()
+        expect(actual).toEqual(expected)
+      })
     })
 
     it('yields a put with completeRequest action', () => {
@@ -48,14 +54,22 @@ describe('redux/sagas', () => {
 
     it('yields a put with acknowledgeRequest action', () => {
       const actual = generator.next().value
-      const expected = put({ ...action, type: ActionTypes.AckRequest })
+      const expected = put({ ...action, type: ActionTypes.RequestAcknowledge })
       expect(actual).toEqual(expected)
+    })
+
+    it('yields call to getWP', () => {
+      const actual = generator.next().value
+      return expect(actual).toEqual(getWP())
     })
 
     it('yields a call to queryFn', () => {
       const actual = generator.next().value
-      const expected = call(action.queryFn, getWP())
-      expect(actual).toEqual(expected)
+
+      return getWP().then((wpapi) => {
+        const expected = call(action.queryFn, wpapi)
+        expect(actual).toEqual(expected)
+      })
     })
 
     it('puts a completeRequest action with result', () => {

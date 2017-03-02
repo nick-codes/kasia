@@ -7,10 +7,10 @@ import merge from 'lodash.merge'
 import { mount } from 'enzyme'
 
 import queryCounter from '../../src/util/queryCounter'
+import ActionTypes from '../../src/redux/ActionTypes'
 import { wrapQueryFn } from '../../src/connect'
-import { ActionTypes } from '../../src/constants'
 
-import '../__mocks__/WP'
+import '../__mocks__/wpapi'
 import initialState from '../__mocks__/states/initial'
 import multipleBooks from '../__mocks__/states/multipleBooks'
 import bookJson from '../__fixtures__/wp-api-responses/book'

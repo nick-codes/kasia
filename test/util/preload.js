@@ -5,8 +5,8 @@ jest.disableAutomock()
 import { join, fork } from 'redux-saga/effects'
 import { createMockTask } from 'redux-saga/utils'
 
-import '../__mocks__/WP'
-import { ActionTypes } from '../../src/constants'
+import '../__mocks__/wpapi'
+import ActionTypes from '../../src/redux/ActionTypes'
 import { fetch } from '../../src/redux/sagas'
 import { preload, preloadQuery } from '../../src/util/preload'
 import { wrapQueryFn } from '../../src/connect'
@@ -31,11 +31,11 @@ describe('util/preload', () => {
     })
 
     it('throws with bad renderProps', () => {
-      expect(() => preload([], '')).toThrowError(/Expecting renderProps to be an object/)
+      expect(() => preload([], '')).toThrowError(/Expecting renderProps to be object/)
     })
 
     it('throws with bad state', () => {
-      expect(() => preload([], {}, '')).toThrowError(/Expecting state to be an object/)
+      expect(() => preload([], {}, '')).toThrowError(/Expecting state to be object/)
     })
 
     it('returns generator', () => {
@@ -78,15 +78,15 @@ describe('util/preload', () => {
     let iter
 
     it('throws with bad queryFn', () => {
-      expect(() => preloadQuery('')).toThrowError(/Expecting queryFn to be a function/)
+      expect(() => preloadQuery('')).toThrowError(/Expecting queryFn to be function/)
     })
 
     it('throws with bad renderProps', () => {
-      expect(() => preloadQuery(() => {}, '')).toThrowError(/Expecting renderProps to be an object/)
+      expect(() => preloadQuery(() => {}, '')).toThrowError(/Expecting renderProps to be object/)
     })
 
     it('throws with bad state', () => {
-      expect(() => preloadQuery(() => {}, {}, '')).toThrowError(/Expecting state to be an object/)
+      expect(() => preloadQuery(() => {}, {}, '')).toThrowError(/Expecting state to be object/)
     })
 
     it('returns generator', () => {

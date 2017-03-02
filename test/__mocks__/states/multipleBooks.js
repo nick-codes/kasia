@@ -1,5 +1,3 @@
-import merge from 'lodash.merge'
-
 import bookJson from '../../__fixtures__/wp-api-responses/book'
 
 export default {
@@ -16,7 +14,11 @@ export default {
     entities: {
       books: {
         [bookJson.id]: bookJson,
-        [bookJson.id + 1]: merge({}, bookJson, { id: bookJson.id + 1, slug: 'new-slug' })
+        [bookJson.id + 1]: {
+          ...bookJson,
+          id: bookJson.id + 1,
+          slug: 'new-slug'
+        }
       }
     }
   }

@@ -34,7 +34,7 @@ function setup () {
   })
 
   const { kasiaReducer, kasiaSagas } = kasia({
-    wpapi: WPAPI.site({ endpoint: '' }),
+    wpapi: WPAPI.site('http://wordpress'),
     plugins: [plugin]
   })
 

@@ -3,9 +3,15 @@ import { Schema, arrayOf } from 'normalizr'
 import invariants from './util/invariants'
 import { ContentTypes, ContentTypesPlural } from './constants'
 
-const api = { __flush__, getAll, createSchema, init }
+const api = { getAll, createSchema, init }
 
 export default api
+
+/** Invalidate the schema object cache.
+ *  @private */
+export function _flushSchemas () {
+  schemas = null
+}
 
 /** Schema object cache, populated in `makeSchemas`. */
 let schemas
@@ -13,11 +19,6 @@ let schemas
 /** Individual schema definitions, defined like this so we can reference one from another. */
 let categorySchema, mediaSchema, pageSchema, postSchema, revisionSchema, tagSchema, userSchema,
   commentSchema, postTypeSchema, postStatusSchema, taxonomySchema
-
-/** Invalidate the schema object cache. */
-function __flush__ () {
-  schemas = null
-}
 
 /** Get the schema object cache. */
 function getAll () {

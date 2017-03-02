@@ -224,9 +224,8 @@ See the end of each example for the alternative Higher Order Component approach.
 
 Connect a component to a single entity in WordPress, e.g. Post, Page, or custom content type. 
 
-- __contentType__ {String} The content type to fetch: the singular name of a content type, or 
+- __contentType__ {String} Singular name of content type to fetch the singular name of a content type, or 
 when using autodiscovery, the plural name of the content type (i.e. method on the `node-wpapi` instance)
-
 - __identifier__ {String|Number|Function} ID or slug of the entity to fetch or function that derives it from `props`
 
 Returns a connected component. 

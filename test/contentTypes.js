@@ -2,9 +2,9 @@
 
 jest.disableAutomock()
 
-import '../__mocks__/WP'
-import contentTypes from '../../src/util/contentTypes'
-import { ContentTypes } from '../../src/constants'
+import './__mocks__/wpapi'
+import contentTypes from '../src/contentTypes'
+import { ContentTypes } from '../src/constants'
 
 describe('util/contentTypes', () => {
   describe('#getAll', () => {

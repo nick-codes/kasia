@@ -32,9 +32,9 @@ export const ContentTypesPlural = {
 }
 
 // These content types do not have `id` properties.
-export const ContentTypesWithoutId = [
-  ContentTypes.Category,
-  ContentTypes.PostType,
-  ContentTypes.PostStatus,
-  ContentTypes.Taxonomy
-]
+export const ContentTypesWithoutId = {
+  [ContentTypes.Category]: ContentTypes.Category,
+  [ContentTypes.PostType]: ContentTypes.PostType,
+  [ContentTypes.PostStatus]: ContentTypes.PostStatus,
+  [ContentTypes.Taxonomy]: ContentTypes.Taxonomy
+}

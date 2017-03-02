@@ -1,5 +1,11 @@
 # Kasia Changelog
 
+- __v4.1.0__
+
+  - Added support for discovery of custom content types a la `node-wpapi`. () 
+  - Added default for `shouldUpdate` that returns false, so components connected with `connectWpQuery` only 
+  fetch data once unless custom function provided. 
+
 - __v4.0.0__
 
   - [BREAKING] WP API responses no longer modified by `wp-api-response-modify` by default. Functionality moved into [`kasia-plugin-wp-api-response-modify`](https://github.com/outlandishideas/kasia/tree/master/packages/kasia-plugin-wp-api-response-modify) plugin.
