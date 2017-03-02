@@ -92,6 +92,7 @@ function kasia (opts = {}) {
   invariants.isArray('plugins', plugins)
   invariants.isArray('contentTypes', _contentTypes)
 
+  const { sagas, reducers } = mergeComponents(plugins, wpapi, opts)
   const usingAutodiscovery = typeof wpapi.then === 'function'
 
   setWP(wpapi)
@@ -103,8 +104,6 @@ function kasia (opts = {}) {
     debug('using manual registration of custom content types')
     _contentTypes.forEach(contentTypes.register)
   }
-
-  const { sagas, reducers } = mergeComponents(plugins, wpapi, opts)
 
   return {
     kasiaReducer: makeReducer({ keyEntitiesBy, reducers }),
