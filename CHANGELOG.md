@@ -2,9 +2,10 @@
 
 - __v4.1.0__
 
-  - Added support for discovery of custom content types a la `node-wpapi`. () 
+  - Added support for discovery of custom content types via `node-wpapi`. () 
   - Added default for `shouldUpdate` that returns false, so components connected with `connectWpQuery` only 
   fetch data once unless custom function provided. 
+  - Update `node-wpapi` to v1.
 
 - __v4.0.0__
 

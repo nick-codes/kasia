@@ -83,7 +83,7 @@ function kasia (opts = {}) {
   } = opts
 
   if (WP) {
-    console.log('[kasia] config option `WP` is replaced by `wpapi` in v4.')
+    console.log('[kasia] Config option `WP` is replaced by `wpapi` in v4.')
     wpapi = WP
   }
 

@@ -2,10 +2,10 @@ import React from 'react'
 import { connect as reduxConnect } from 'react-redux'
 
 import debug from './util/debug'
-import contentTypes from './contentTypes'
 import invariants from './util/invariants'
 import queryCounter from './util/queryCounter'
-import entities from './util/entities'
+import contentTypes from './contentTypes'
+import entities from './entities'
 import { createPostRequest, createQueryRequest } from './redux/actions'
 import { fetch } from './redux/sagas'
 
@@ -37,9 +37,9 @@ export function wrapQueryFn (queryFn, props, state) {
 
 /** Wrap component in react-redux connect. */
 function connect (cls) {
-  return reduxConnect(({ wordpress }) => {
-    invariants.isKasiaConfiguredStore(wordpress)
-    return { wordpress }
+  return reduxConnect((state) => {
+    invariants.isKasiaConfiguredStore(state)
+    return { state }
   })(cls)
 }
 
@@ -50,10 +50,6 @@ const base = (target) => {
     static __kasia__ = true
 
     static WrappedComponent = target
-
-    static contextTypes = {
-      store: React.PropTypes.object.isRequired
-    }
 
     /** Make request for new data from WP-API. */
     _requestWpData (props, queryId) {
@@ -70,7 +66,7 @@ const base = (target) => {
       const fallbackQuery = { complete: false, OK: null }
 
       if (query && query.error) {
-        console.log(`[kasia] error in query for ${displayName || 'unknown component'}:\n` + query.error)
+        console.log(`[kasia] Error in query for ${displayName}:\n` + query.error)
       }
 
       const result = {
@@ -93,11 +89,11 @@ const base = (target) => {
     }
 
     _query () {
-      return this.props.wordpress.queries[this.queryId]
+      return this.props.state.wordpress.queries[this.queryId]
     }
 
     componentWillMount () {
-      const state = this.props.wordpress
+      const state = this.props.state.wordpress
       const numQueries = Object.keys(state.queries).length - 1
       const nextCounterIndex = queryCounter.current() + 1
 
@@ -128,7 +124,7 @@ const base = (target) => {
     }
 
     componentWillReceiveProps (nextProps) {
-      const willUpdate = this._shouldUpdate(this.props, nextProps, this.context.store.getState())
+      const willUpdate = this._shouldUpdate(this.props, nextProps, this.props.state)
       if (willUpdate) this._requestWpData(nextProps, queryCounter.next())
     }
 
@@ -201,13 +197,15 @@ export function connectWpPost (contentType, id) {
 
         if (!query || !query.complete || query.error) return null
 
-        const entities = this.props.wordpress.entities[typeConfig.plural]
+        const entities = this.props.state.wordpress.entities[typeConfig.plural]
         const keys = Object.keys(entities)
         const realId = identifier(displayName, id, props)
 
-        for (let i = 0, len = keys.length; i < len; i++) {
-          const entity = entities[keys[i]]
-          if (entity.id === realId || entity.slug === realId) return entity
+        if (entities) {
+          for (let i = 0, len = keys.length; i < len; i++) {
+            const entity = entities[keys[i]]
+            if (entity.id === realId || entity.slug === realId) return entity
+          }
         }
 
         return null
@@ -290,13 +288,13 @@ export function connectWpQuery (queryFn, shouldUpdate = () => false) {
 
       _getRequestWpDataAction (props) {
         debug(displayName, 'connectWpQuery request with props:', props)
-        const wrappedQueryFn = wrapQueryFn(queryFn, props, this.context.store.getState())
+        const wrappedQueryFn = wrapQueryFn(queryFn, props, this.props.state)
         return createQueryRequest(wrappedQueryFn)
       }
 
       _makePropsData () {
         const query = this._query()
-        const state = this.props.wordpress
+        const state = this.props.state.wordpress
         if (!query || !query.complete || query.error) return {}
         return entities.find(state.entities, state.keyEntitiesBy, query.entities)
       }

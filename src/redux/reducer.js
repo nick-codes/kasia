@@ -1,7 +1,7 @@
 import merge from 'lodash.merge'
 import isNode from 'is-node-fn'
 
-import entities from '../util/entities'
+import entities from '../entities'
 import ActionTypes from './ActionTypes'
 
 export const INITIAL_STATE = {
@@ -55,16 +55,14 @@ export function _mergeNativeAndThirdPartyReducers (reducers, normaliser) {
 // ACKNOWLEDGE
 // Place record of request o
 export function _acknowledgeReducer (state, action) {
-  return merge({}, state, {
-    queries: {
-      [action.id]: {
-        id: action.id,
-        prepared: isNode(),
-        complete: false,
-        OK: null
-      }
+  return merge({}, state, { queries: {
+    [action.id]: {
+      id: action.id,
+      prepared: isNode(),
+      complete: false,
+      OK: null
     }
-  })
+  } })
 }
 
 // COMPLETE
@@ -99,17 +97,15 @@ export function _completeReducer (normalise) {
 // FAIL
 // Update query record only
 export function _failReducer (state, action) {
-  return merge({}, state, {
-    queries: {
-      [action.id]: {
-        id: action.id,
-        error: action.error,
-        prepared: isNode(),
-        complete: true,
-        OK: false
-      }
+  return merge({}, state, { queries: {
+    [action.id]: {
+      id: action.id,
+      error: action.error,
+      prepared: isNode(),
+      complete: true,
+      OK: false
     }
-  })
+  } })
 }
 
 /**

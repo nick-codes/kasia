@@ -42,7 +42,7 @@ Get data from WordPress and into components with ease...
 ```js
 // e.g. Get a post by its slug
 @connectWpPost('post', 'spongebob-squarepants')
-export default class extends React.Component () {
+export default class extends React.Component {
   render () {
     const { post: spongebob } = this.props.kasia
     
@@ -58,9 +58,9 @@ export default class extends React.Component () {
 
 ## Features
 
-- Declaratively connect React components to data from WordPress.
+- Declaratively connect components to data in WordPress via the WP-API.
 - Uses [`node-wpapi`](https://github.com/WP-API/node-wpapi) in order to facilitate complex queries.
-- Autodiscover, register, and consume Custom Content Types.
+- Auto-discover custom content types.
 - All data normalised at `store.wordpress`, e.g. `store.wordpress.pages`.
 - Support for universal applications.
 - Support for plugins, e.g. [`wp-api-menus`](https://github.com/outlandishideas/kasia-plugin-wp-api-menus).

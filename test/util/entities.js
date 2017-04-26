@@ -1,4 +1,4 @@
-import entities from '../../src/util/entities'
+import entities from '../../src/entities'
 
 describe('util/entities', () => {
   describe('#pick', () => {

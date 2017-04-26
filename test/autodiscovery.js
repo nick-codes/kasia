@@ -1,7 +1,8 @@
+jest.mock('superagent')
+
 import kasia from '../src'
 import getWP from '../src/wpapi'
-import contentTypes, { _makeWpapiMethodCaller } from '../src/contentTypes'
-import { WpApiNamespace } from '../src/constants'
+import contentTypes from '../src/contentTypes'
 
 describe('autodiscovery', () => {
   it('sets promise as internal wpapi record', () => {
@@ -19,13 +20,10 @@ describe('autodiscovery', () => {
     kasia({ wpapi })
 
     return wpapi.then(() => {
-      expect(contentTypes.get('blogPosts')).toEqual({
-        namespace: WpApiNamespace,
-        name: 'blogPosts',
-        plural: 'blogPosts',
-        slug: 'blogPost',
-        call: _makeWpapiMethodCaller('blogPosts')
-      })
+      const expected = contentTypes.get('blogPosts')
+      expect(expected.name).toEqual('blogPosts')
+      expect(expected.plural).toEqual('blogPosts')
+      expect(expected.slug).toEqual('blogPosts')
     })
   })
 

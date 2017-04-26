@@ -1,5 +1,5 @@
 import '../__mocks__/wpapi'
-import entities from '../../src/util/entities'
+import entities from '../../src/entities'
 import contentTypes from '../../src/contentTypes'
 import { _flushSchemas } from '../../src/schemas'
 import { ContentTypes } from '../../src/constants'

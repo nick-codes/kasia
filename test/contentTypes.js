@@ -1,5 +1,5 @@
 import './__mocks__/wpapi'
-import contentTypes from '../src/contentTypes'
+import contentTypes, { _makeWpapiMethodCaller } from '../src/contentTypes'
 import { ContentTypes } from '../src/constants'
 
 describe('util/contentTypes', () => {
@@ -23,25 +23,21 @@ describe('util/contentTypes', () => {
       expect(fn).toThrowError(/Invalid content type object/)
     })
 
-    Object.values(ContentTypes).forEach((builtInType) => {
-      it('throws when name is ' + builtInType, () => {
-        const opts = { name: builtInType, plural: builtInType, slug: builtInType }
-        const fn = () => contentTypes.register(opts)
-        const expected = `Content type with name "${builtInType}" already exists.`
-        expect(fn).toThrowError(expected)
-      })
+    it('throws when name is built-in', () => {
+      const builtInType = ContentTypes.Post;
+      const opts = { name: builtInType, plural: builtInType, slug: builtInType }
+      const fn = () => contentTypes.register(opts)
+      const expected = `Content type with name "${builtInType}" already exists.`
+      expect(fn).toThrowError(expected)
     })
 
     it('adds custom content type to cache', () => {
       const opts = { name: 'article', plural: 'articles', slug: 'articles' }
       contentTypes.register(opts)
       const actual = contentTypes.get('article')
-      const expected = {
-        ...opts,
-        call: 'articles',
-        route: '/articles/(?P<id>)'
-      }
-      expect(actual).toEqual(expected)
+      expect(actual.name).toEqual(opts.name)
+      expect(actual.plural).toEqual(opts.plural)
+      expect(actual.slug).toEqual(opts.slug)
     })
   })
 })

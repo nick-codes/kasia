@@ -2,9 +2,9 @@ import pickToArray from 'pick-to-array'
 import { normalize, arrayOf } from 'normalizr'
 import merge from 'lodash.merge'
 
-import schemasManager from '../schemas'
-import contentTypes from '../contentTypes'
-import { ContentTypesWithoutId } from '../constants'
+import schemas from './schemas'
+import contentTypes from './contentTypes'
+import { ContentTypesWithoutId } from './constants'
 
 const api = { pickIds, find, normalise }
 
@@ -27,30 +27,34 @@ function pickIds (response) {
   return entityIdentifiers
 }
 
-/** Filter `entities` to contain only those whose `keyToInspect` is in `identifiers`. */
-function find (entities, keyToInspect, identifiers) {
+/** Filter `entities` to contain only those whose `idKey` is in `identifiers`. */
+function find (entities, idKey, identifiers) {
   identifiers = identifiers.map(String)
 
   const reduced = {}
 
-  for (const entityTypeName in entities) {
-    const entitiesOfType = entities[entityTypeName]
+  for (const entityType in entities) {
+    const entitiesOfType = entities[entityType]
 
     for (const key in entitiesOfType) {
       const entity = entitiesOfType[key]
 
-      // Try to find entity by `keyToInspect` but fall back on id and then slug as
-      // for entities that don't have an `id` identifiers will contain their slug
-      // and vice-versa for entities that don't have a `slug`
-      let entityId = isDef(entity[keyToInspect])
-        ? entity[keyToInspect]
-        : isDef(entity.id) ? entity.id : entity.slug
+      // Try to find entity by `idKey`
+      // Fall back on id first, then slug, as for entities that don't
+      // have an id `identifiers` will contain their slug and vice-versa
+      const entityId = String(
+        isDef(entity[idKey])
+          ? entity[idKey] : isDef(entity.id)
+            ? entity.id : entity.slug
+      )
 
-      entityId = String(entityId)
+      if (!entityId) {
+        console.log('[kasia] Could not derive id from entity: ' + JSON.stringify(entity))
+      }
 
-      if (identifiers.indexOf(entityId) !== -1) {
-        reduced[entityTypeName] = reduced[entityTypeName] || {}
-        reduced[entityTypeName][key] = entity
+      if (entityId && identifiers.indexOf(entityId) !== -1) {
+        reduced[entityType] = reduced[entityType] || {}
+        reduced[entityType][key] = entity
       }
     }
   }
@@ -60,24 +64,21 @@ function find (entities, keyToInspect, identifiers) {
 
 /** Split a response from the WP-API into its constituent entities. */
 function normalise (response, idAttribute) {
-  const schemas = schemasManager.getAll() || schemasManager.init(idAttribute)
+  const contentTypeSchemas = schemas.getAll() || schemas.init(idAttribute)
 
   return [].concat(response).reduce((entities, entity) => {
     const type = contentTypes.derive(entity)
 
     if (!type) {
-      console.log(
-        `[kasia] could not derive entity type - ignoring.`,
-        `Entity: ${entity ? JSON.stringify(entity) : typeof entity}`
-      )
+      console.log('[kasia] Could not derive type from entity: ' + JSON.stringify(entity))
       return entities
     }
 
-    const contentTypeSchema = schemas[type]
+    const contentTypeSchema = contentTypeSchemas[type]
       // Built-in content type or previously registered custom content type
-      ? schemas[type]
+      ? contentTypeSchemas[type]
       // Custom content type, will only get here once for each type
-      : schemasManager.createSchema(type, idAttribute)
+      : schemas.createSchema(type, idAttribute)
 
     const schema = Array.isArray(entity)
       ? arrayOf(contentTypeSchema)

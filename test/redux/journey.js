@@ -8,7 +8,7 @@ import { wpapi } from '../__mocks__/wpapi'
 
 import kasia from '../../src'
 import queryCounter from '../../src/util/queryCounter'
-import entities from '../../src/util/entities'
+import entities from '../../src/entities'
 import { _flushSchemas } from '../../src/schemas'
 import { ContentTypes } from '../../src/constants'
 import { createPostRequest, completeRequest, failRequest } from '../../src/redux/actions'

@@ -15,7 +15,8 @@ export default api
 export function _makeWpapiMethodCaller (typeMethod, typeName) {
   return (wpapi, identifier) => {
     invariants.isCustomContentTypeMethod(wpapi, typeMethod, typeName)
-    return wpapi[typeMethod](identifier).embed().get()
+    const idMethod = typeof identifier === 'string' ? 'slug' : 'id'
+    return wpapi[typeMethod]()[idMethod](identifier).embed().get()
   }
 }
 
@@ -55,7 +56,6 @@ function register (contentType, registerOnInstance = true) {
     call: _makeWpapiMethodCaller(typeMethod, name)
   }
 
-  // Only register custom types with node-wpapi instance as built-ins are already available
   if (registerOnInstance) {
     getWP().then((wpapi) => {
       const route = contentType.route || `/${slug}/(?P<id>)`

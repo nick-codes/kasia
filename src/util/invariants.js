@@ -78,12 +78,12 @@ export default {
     'Expecting a string or number, got %s.',
     typeof id
   ),
-  isKasiaConfiguredStore: (wordpress) => invariant(
-    wordpress,
+  isKasiaConfiguredStore: (state = {}) => invariant(
+    state.wordpress,
     'No `wordpress` object on the store. ' +
     'Is your store configured correctly? ' +
     'See documentation %s.',
-    typeof wordpress, KASIA_URL
+    typeof state.wordpress, KASIA_URL
   ),
   isKeyEntitiesByOption: (keyEntitiesBy) => invariant(
     keyEntitiesBy === 'slug' || keyEntitiesBy === 'id',
