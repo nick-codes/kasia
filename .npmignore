@@ -1,12 +1,13 @@
 .idea/
 .vscode/
-node_modules/
 coverage/
 packages/
 assets/
 test/
-src/
 dist/
+docs/
 *.log
-
 !lib/
+.travis.yml
+.editorconfig
+.npmignore

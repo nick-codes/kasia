@@ -12,7 +12,9 @@
     "test:coverage": "jest --coverage",
     "example:simple": "node examples/server.js",
     "prepublish": "check-node-version --npm \">= 4.0.0\"",
-    "prepublishOnly": "in-publish && npm run lint && npm run test && npm run build"
+    "adjustpack": "echo 'src/' >> .npmigore && echo 'node_modules/' >> .npmigore && echo '.bablerc' >> .npmignore",
+    "prepublishOnly": "in-publish && npm run lint && npm run test && npm run build && npm run adjustpack",
+    "postinstall": "postinstall-build lib"
   },
   "repository": {
     "type": "git",
@@ -43,6 +45,7 @@
     "lodash.merge": "^4.6.0",
     "normalizr": "^2.3.1",
     "pick-to-array": "^1.1.0",
+    "postinstall-build": "^3.0.0",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
